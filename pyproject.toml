@@ -1,0 +1,163 @@
+[tool.poetry]
+name = "customer-support-ai"
+version = "0.1.0"
+description = "Enterprise Customer Support AI/ML Platform — Production-grade system demonstrating Principal Data Scientist / Principal Applied AI capabilities"
+authors = ["Prasad Ovhal <prasadovhal99@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+# Backend / API
+fastapi = "^0.104.0"
+uvicorn = {version = "^0.24.0", extras = ["standard"]}
+pydantic = "^2.5.0"
+pydantic-settings = "^2.1.0"
+
+# Database
+psycopg2-binary = "^2.9.0"
+sqlalchemy = "^2.0.0"
+alembic = "^1.12.0"
+pgvector = "^0.2.4"
+
+# Caching / Queue
+redis = "^5.0.0"
+
+# Background jobs
+celery = {version = "^5.3.0", extras = ["redis"]}
+
+# Agent / Workflow orchestration
+langgraph = "^0.0.30"
+langchain = "^0.1.0"
+langchain-core = "^0.1.0"
+
+# HTTP client
+httpx = "^0.27.0"
+
+# Embeddings / RAG
+sentence-transformers = "^2.2.0"
+rank-bm25 = "^0.2.2"
+
+# ML / Classical baselines
+scikit-learn = "^1.3.0"
+numpy = "^1.26.0"
+pandas = "^2.1.0"
+
+# Observability
+opentelemetry-api = "^1.21.0"
+opentelemetry-sdk = "^1.21.0"
+opentelemetry-instrumentation-fastapi = "^0.42b0"
+opentelemetry-instrumentation-sqlalchemy = "^0.42b0"
+opentelemetry-instrumentation-redis = "^0.42b0"
+opentelemetry-instrumentation-celery = "^0.42b0"
+opentelemetry-instrumentation-httpx = "^0.42b0"
+opentelemetry-exporter-jaeger = "^1.21.0"
+
+# LLM / Model serving
+ollama = "^0.1.0"
+
+# Authentication
+PyJWT = "^2.8.0"
+python-jose = {version = "^3.3.0", extras = ["cryptography"]}
+passlib = {version = "^1.7.0", extras = ["bcrypt"]}
+python-multipart = "^0.0.6"
+
+# Utilities
+python-dateutil = "^2.8.0"
+pytz = "^2023.3"
+python-dotenv = "^1.0.0"
+loguru = "^0.7.0"
+tenacity = "^8.2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.0"
+pytest-cov = "^4.1.0"
+pytest-xdist = "^3.5.0"
+black = "^23.11.0"
+ruff = "^0.1.0"
+mypy = "^1.7.0"
+pre-commit = "^3.5.0"
+pytest-httpx = "^0.30.0"
+factory-boy = "^3.3.0"
+
+[tool.poetry.extras]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+exclude = [".git", ".venv", "__pycache__", "dist", "build"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-v --strict-markers --cov=src --cov-report=term-and-html"
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "unit: unit tests",
+    "integration: integration tests",
+    "workflow: workflow tests",
+    "rag: RAG tests",
+    "evaluation: evaluation tests",
+    "slow: slow tests",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__init__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"

@@ -1,0 +1,101 @@
+product_id,sku,product_name,category,subcategory,description,price,currency,stock_status,warranty_months,return_window_days,is_active,created_at,updated_at
+PROD-001,SKU-LAP-0001,ProEdge 95S,Laptops,Laptops,"Performance laptop for professionals, 16GB RAM",2193.82,USD,in_stock,24,15,true,2023-04-24T00:00:00Z,2024-06-06T00:00:00Z
+PROD-002,SKU-LAP-0002,ProEdge 45S,Laptops,Laptops,"Performance laptop for professionals, 64GB RAM",2846.71,USD,discontinued,24,15,false,2024-09-02T00:00:00Z,2025-11-14T00:00:00Z
+PROD-003,SKU-LAP-0003,ProEdge 38S,Laptops,Laptops,"Performance laptop for professionals, 4GB RAM",986.69,USD,out_of_stock,24,15,true,2022-10-21T00:00:00Z,2025-08-19T00:00:00Z
+PROD-004,SKU-LAP-0004,AcmePro X12 Laptop,Laptops,Laptops,"14-inch business laptop, 8GB RAM, 1024GB SSD",2579.89,USD,in_stock,24,15,true,2024-08-14T00:00:00Z,2025-03-30T00:00:00Z
+PROD-005,SKU-LAP-0005,AcmePro X32 Laptop,Laptops,Laptops,"14-inch business laptop, 32GB RAM, 256GB SSD",925.08,USD,in_stock,24,15,true,2022-07-03T00:00:00Z,2022-08-31T00:00:00Z
+PROD-006,SKU-LAP-0006,AcmePro X99 Laptop,Laptops,Laptops,"14-inch business laptop, 16GB RAM, 1024GB SSD",1049.94,USD,in_stock,24,15,true,2023-06-12T00:00:00Z,2025-12-17T00:00:00Z
+PROD-007,SKU-LAP-0007,ProEdge 69S,Laptops,Laptops,"Performance laptop for professionals, 4GB RAM",2312.54,USD,in_stock,24,15,true,2022-07-05T00:00:00Z,2024-05-16T00:00:00Z
+PROD-008,SKU-LAP-0008,AcmePro X83 Laptop,Laptops,Laptops,"14-inch business laptop, 64GB RAM, 128GB SSD",1441.53,USD,in_stock,24,15,true,2024-02-21T00:00:00Z,2025-09-18T00:00:00Z
+PROD-009,SKU-LAP-0009,SwiftBook 29 Ultra,Laptops,Laptops,Slim ultrabook with 256GB RAM and long battery life,788.22,USD,in_stock,24,15,true,2022-06-29T00:00:00Z,2024-05-25T00:00:00Z
+PROD-010,SKU-LAP-0010,ProEdge 96S,Laptops,Laptops,"Performance laptop for professionals, 64GB RAM",1931.10,USD,out_of_stock,24,15,true,2022-09-18T00:00:00Z,2024-11-04T00:00:00Z
+PROD-011,SKU-SMA-0011,AcmeDial X40,Smartphones,Smartphones,Flagship smartphone with triple camera system,1007.07,USD,out_of_stock,12,15,true,2023-01-24T00:00:00Z,2025-06-09T00:00:00Z
+PROD-012,SKU-SMA-0012,ZenMobile 87,Smartphones,Smartphones,Mid-range smartphone with 256GB storage,922.70,USD,in_stock,12,15,true,2023-03-31T00:00:00Z,2023-04-09T00:00:00Z
+PROD-013,SKU-SMA-0013,AcmeDial X41,Smartphones,Smartphones,Flagship smartphone with triple camera system,1278.38,USD,out_of_stock,12,15,true,2023-08-31T00:00:00Z,2025-01-23T00:00:00Z
+PROD-014,SKU-SMA-0014,AcmeDial X77,Smartphones,Smartphones,Flagship smartphone with triple camera system,474.04,USD,in_stock,12,15,true,2022-03-12T00:00:00Z,2023-12-04T00:00:00Z
+PROD-015,SKU-SMA-0015,AcmeDial X36,Smartphones,Smartphones,Flagship smartphone with triple camera system,987.77,USD,in_stock,12,15,true,2023-03-18T00:00:00Z,2025-03-08T00:00:00Z
+PROD-016,SKU-SMA-0016,ZenMobile 20,Smartphones,Smartphones,Mid-range smartphone with 4GB storage,551.74,USD,in_stock,12,15,true,2023-04-06T00:00:00Z,2023-05-29T00:00:00Z
+PROD-017,SKU-SMA-0017,NovPhone 94 Pro,Smartphones,Smartphones,"5G smartphone, 256MP camera, AMOLED display",657.92,USD,discontinued,12,15,false,2022-11-23T00:00:00Z,2025-12-19T00:00:00Z
+PROD-018,SKU-SMA-0018,ZenMobile 87,Smartphones,Smartphones,Mid-range smartphone with 16GB storage,1487.38,USD,in_stock,12,15,true,2024-03-12T00:00:00Z,2025-09-03T00:00:00Z
+PROD-019,SKU-SMA-0019,AcmeDial X90,Smartphones,Smartphones,Flagship smartphone with triple camera system,1140.33,USD,in_stock,12,15,true,2024-03-17T00:00:00Z,2025-02-11T00:00:00Z
+PROD-020,SKU-SMA-0020,AcmeDial X91,Smartphones,Smartphones,Flagship smartphone with triple camera system,848.04,USD,in_stock,12,15,true,2022-12-02T00:00:00Z,2025-05-24T00:00:00Z
+PROD-021,SKU-TAB-0021,LiteTab 19,Tablets,Tablets,Lightweight 8-inch tablet for everyday use,373.51,USD,in_stock,12,15,true,2023-02-05T00:00:00Z,2023-02-23T00:00:00Z
+PROD-022,SKU-TAB-0022,AcmeSlate 87 Pro,Tablets,Tablets,Professional-grade tablet with stylus support,500.24,USD,in_stock,12,15,true,2024-05-24T00:00:00Z,2024-11-12T00:00:00Z
+PROD-023,SKU-TAB-0023,TabMax 61,Tablets,Tablets,"10-inch tablet, 4GB RAM, ideal for productivity",955.05,USD,discontinued,12,15,false,2022-08-29T00:00:00Z,2024-07-22T00:00:00Z
+PROD-024,SKU-TAB-0024,LiteTab 81,Tablets,Tablets,Lightweight 8-inch tablet for everyday use,522.20,USD,in_stock,12,15,true,2022-03-11T00:00:00Z,2024-05-31T00:00:00Z
+PROD-025,SKU-TAB-0025,AcmeSlate 84 Pro,Tablets,Tablets,Professional-grade tablet with stylus support,499.30,USD,in_stock,12,15,true,2022-07-03T00:00:00Z,2024-08-23T00:00:00Z
+PROD-026,SKU-TAB-0026,AcmeSlate 48 Pro,Tablets,Tablets,Professional-grade tablet with stylus support,295.00,USD,in_stock,12,15,true,2022-06-19T00:00:00Z,2025-04-27T00:00:00Z
+PROD-027,SKU-TAB-0027,TabMax 36,Tablets,Tablets,"10-inch tablet, 4GB RAM, ideal for productivity",795.29,USD,in_stock,12,15,true,2023-01-06T00:00:00Z,2025-06-12T00:00:00Z
+PROD-028,SKU-TAB-0028,AcmeSlate 13 Pro,Tablets,Tablets,Professional-grade tablet with stylus support,249.80,USD,in_stock,12,15,true,2023-01-14T00:00:00Z,2023-02-23T00:00:00Z
+PROD-029,SKU-TAB-0029,AcmeSlate 9 Pro,Tablets,Tablets,Professional-grade tablet with stylus support,868.72,USD,in_stock,12,15,true,2022-09-12T00:00:00Z,2023-11-10T00:00:00Z
+PROD-030,SKU-TAB-0030,LiteTab 77,Tablets,Tablets,Lightweight 8-inch tablet for everyday use,342.95,USD,out_of_stock,12,15,true,2024-07-04T00:00:00Z,2024-11-06T00:00:00Z
+PROD-031,SKU-ELE-0031,AcmeSpark 84,Electronics,Electronics,General electronics device with advanced features,88.52,USD,out_of_stock,12,30,true,2023-06-10T00:00:00Z,2023-07-15T00:00:00Z
+PROD-032,SKU-ELE-0032,AcmeSpark 47,Electronics,Electronics,General electronics device with advanced features,126.22,USD,in_stock,12,30,true,2022-01-01T00:00:00Z,2022-04-05T00:00:00Z
+PROD-033,SKU-ELE-0033,DigiLink 85,Electronics,Electronics,Digital connectivity device,249.21,USD,in_stock,12,30,true,2024-10-01T00:00:00Z,2025-06-25T00:00:00Z
+PROD-034,SKU-ELE-0034,TechCore 89 Pro,Electronics,Electronics,Smart device with connectivity features,347.18,USD,in_stock,12,30,true,2022-04-02T00:00:00Z,2023-04-22T00:00:00Z
+PROD-035,SKU-ELE-0035,AcmeSpark 18,Electronics,Electronics,General electronics device with advanced features,297.43,USD,in_stock,12,30,true,2024-01-06T00:00:00Z,2025-10-04T00:00:00Z
+PROD-036,SKU-ELE-0036,TechCore 34 Pro,Electronics,Electronics,Smart device with connectivity features,341.40,USD,in_stock,12,30,true,2022-12-01T00:00:00Z,2023-05-20T00:00:00Z
+PROD-037,SKU-ELE-0037,TechCore 89 Pro,Electronics,Electronics,Smart device with connectivity features,290.16,USD,in_stock,12,30,true,2022-05-25T00:00:00Z,2023-11-27T00:00:00Z
+PROD-038,SKU-ELE-0038,DigiLink 92,Electronics,Electronics,Digital connectivity device,302.64,USD,in_stock,12,30,true,2024-11-13T00:00:00Z,2025-06-15T00:00:00Z
+PROD-039,SKU-ELE-0039,AcmeSpark 49,Electronics,Electronics,General electronics device with advanced features,482.81,USD,in_stock,12,30,true,2023-05-22T00:00:00Z,2023-09-26T00:00:00Z
+PROD-040,SKU-ELE-0040,DigiLink 9,Electronics,Electronics,Digital connectivity device,337.08,USD,out_of_stock,12,30,true,2024-01-14T00:00:00Z,2024-10-19T00:00:00Z
+PROD-041,SKU-ACC-0041,AcmeCase 36,Accessories,Accessories,Protective case compatible with multiple devices,22.71,USD,in_stock,6,30,true,2023-04-01T00:00:00Z,2023-07-17T00:00:00Z
+PROD-042,SKU-ACC-0042,AcmeCase 76,Accessories,Accessories,Protective case compatible with multiple devices,22.38,USD,in_stock,6,30,true,2023-12-16T00:00:00Z,2024-09-29T00:00:00Z
+PROD-043,SKU-ACC-0043,SlimHub 7,Accessories,Accessories,Portable USB hub with 16 ports,53.52,USD,in_stock,6,30,true,2024-03-08T00:00:00Z,2025-09-03T00:00:00Z
+PROD-044,SKU-ACC-0044,SlimHub 62,Accessories,Accessories,Portable USB hub with 64 ports,26.86,USD,in_stock,6,30,true,2022-01-20T00:00:00Z,2022-12-04T00:00:00Z
+PROD-045,SKU-ACC-0045,SlimHub 49,Accessories,Accessories,Portable USB hub with 8 ports,111.96,USD,out_of_stock,6,30,true,2022-04-19T00:00:00Z,2025-11-18T00:00:00Z
+PROD-046,SKU-ACC-0046,PowerLink 87 Cable,Accessories,Accessories,"USB-C charging cable, 128W fast charge",67.55,USD,in_stock,6,30,true,2024-07-26T00:00:00Z,2025-07-23T00:00:00Z
+PROD-047,SKU-ACC-0047,PowerLink 36 Cable,Accessories,Accessories,"USB-C charging cable, 64W fast charge",81.88,USD,in_stock,6,30,true,2023-04-14T00:00:00Z,2025-09-08T00:00:00Z
+PROD-048,SKU-ACC-0048,AcmeCase 99,Accessories,Accessories,Protective case compatible with multiple devices,127.33,USD,in_stock,6,30,true,2022-06-12T00:00:00Z,2023-10-16T00:00:00Z
+PROD-049,SKU-ACC-0049,AcmeCase 11,Accessories,Accessories,Protective case compatible with multiple devices,49.02,USD,out_of_stock,6,30,true,2024-10-06T00:00:00Z,2024-10-11T00:00:00Z
+PROD-050,SKU-ACC-0050,PowerLink 62 Cable,Accessories,Accessories,"USB-C charging cable, 128W fast charge",81.10,USD,in_stock,6,30,true,2024-12-26T00:00:00Z,2025-07-21T00:00:00Z
+PROD-051,SKU-HOM-0051,AcmeBreeze 96,HomeAppliances,HomeAppliances,Smart air purifier with HEPA filter,450.36,USD,in_stock,24,30,true,2024-12-30T00:00:00Z,2025-05-04T00:00:00Z
+PROD-052,SKU-HOM-0052,SmartHome 78,HomeAppliances,HomeAppliances,Connected home automation device,580.62,USD,out_of_stock,24,30,true,2024-12-08T00:00:00Z,2025-03-07T00:00:00Z
+PROD-053,SKU-HOM-0053,AcmeBreeze 66,HomeAppliances,HomeAppliances,Smart air purifier with HEPA filter,574.29,USD,in_stock,24,30,true,2024-05-15T00:00:00Z,2024-11-05T00:00:00Z
+PROD-054,SKU-HOM-0054,HomeCore 87 Plus,HomeAppliances,HomeAppliances,Energy-efficient home appliance,511.50,USD,in_stock,24,30,true,2022-08-30T00:00:00Z,2025-05-15T00:00:00Z
+PROD-055,SKU-HOM-0055,HomeCore 1 Plus,HomeAppliances,HomeAppliances,Energy-efficient home appliance,407.21,USD,in_stock,24,30,true,2024-03-17T00:00:00Z,2025-01-23T00:00:00Z
+PROD-056,SKU-HOM-0056,SmartHome 60,HomeAppliances,HomeAppliances,Connected home automation device,520.14,USD,in_stock,24,30,true,2022-04-28T00:00:00Z,2025-10-09T00:00:00Z
+PROD-057,SKU-HOM-0057,HomeCore 46 Plus,HomeAppliances,HomeAppliances,Energy-efficient home appliance,81.68,USD,in_stock,24,30,true,2023-01-17T00:00:00Z,2023-02-04T00:00:00Z
+PROD-058,SKU-HOM-0058,AcmeBreeze 26,HomeAppliances,HomeAppliances,Smart air purifier with HEPA filter,354.13,USD,in_stock,24,30,true,2022-11-11T00:00:00Z,2025-08-05T00:00:00Z
+PROD-059,SKU-HOM-0059,AcmeBreeze 29,HomeAppliances,HomeAppliances,Smart air purifier with HEPA filter,284.59,USD,in_stock,24,30,true,2023-09-05T00:00:00Z,2024-03-09T00:00:00Z
+PROD-060,SKU-HOM-0060,SmartHome 14,HomeAppliances,HomeAppliances,Connected home automation device,420.27,USD,in_stock,24,30,true,2024-06-18T00:00:00Z,2025-06-15T00:00:00Z
+PROD-061,SKU-WEA-0061,ActivePulse 46,Wearables,Wearables,Sports wearable with GPS tracking,118.46,USD,in_stock,12,30,true,2023-01-24T00:00:00Z,2023-10-24T00:00:00Z
+PROD-062,SKU-WEA-0062,SmartBand 5 Pro,Wearables,Wearables,Advanced smartwatch with health monitoring,282.17,USD,discontinued,12,30,false,2024-09-08T00:00:00Z,2025-01-22T00:00:00Z
+PROD-063,SKU-WEA-0063,AcmeFit 71,Wearables,Wearables,Fitness tracker with heart rate monitor,328.94,USD,in_stock,12,30,true,2022-09-18T00:00:00Z,2024-12-14T00:00:00Z
+PROD-064,SKU-WEA-0064,ActivePulse 17,Wearables,Wearables,Sports wearable with GPS tracking,384.19,USD,in_stock,12,30,true,2022-02-13T00:00:00Z,2024-01-18T00:00:00Z
+PROD-065,SKU-WEA-0065,ActivePulse 7,Wearables,Wearables,Sports wearable with GPS tracking,339.44,USD,discontinued,12,30,false,2024-05-29T00:00:00Z,2024-06-06T00:00:00Z
+PROD-066,SKU-WEA-0066,SmartBand 37 Pro,Wearables,Wearables,Advanced smartwatch with health monitoring,77.92,USD,in_stock,12,30,true,2024-05-28T00:00:00Z,2024-10-31T00:00:00Z
+PROD-067,SKU-WEA-0067,ActivePulse 32,Wearables,Wearables,Sports wearable with GPS tracking,317.35,USD,discontinued,12,30,false,2023-06-24T00:00:00Z,2024-03-03T00:00:00Z
+PROD-068,SKU-WEA-0068,ActivePulse 26,Wearables,Wearables,Sports wearable with GPS tracking,296.26,USD,in_stock,12,30,true,2022-07-31T00:00:00Z,2025-05-24T00:00:00Z
+PROD-069,SKU-WEA-0069,ActivePulse 76,Wearables,Wearables,Sports wearable with GPS tracking,271.07,USD,in_stock,12,30,true,2023-04-15T00:00:00Z,2024-05-29T00:00:00Z
+PROD-070,SKU-WEA-0070,AcmeFit 19,Wearables,Wearables,Fitness tracker with heart rate monitor,55.18,USD,in_stock,12,30,true,2023-02-13T00:00:00Z,2023-05-28T00:00:00Z
+PROD-071,SKU-AUD-0071,AcmeBuds 90 Pro,Audio,Audio,True wireless earbuds with noise cancellation,489.66,USD,in_stock,12,30,true,2023-03-31T00:00:00Z,2024-08-02T00:00:00Z
+PROD-072,SKU-AUD-0072,NovaSound BT83,Audio,Audio,"Bluetooth over-ear headphones, ANC",172.02,USD,in_stock,12,30,true,2023-07-06T00:00:00Z,2024-06-29T00:00:00Z
+PROD-073,SKU-AUD-0073,SoundBar 41,Audio,Audio,"Home audio soundbar, 32W output",114.42,USD,in_stock,12,30,true,2022-01-02T00:00:00Z,2023-10-22T00:00:00Z
+PROD-074,SKU-AUD-0074,NovaSound BT36,Audio,Audio,"Bluetooth over-ear headphones, ANC",76.36,USD,in_stock,12,30,true,2023-01-14T00:00:00Z,2025-10-16T00:00:00Z
+PROD-075,SKU-AUD-0075,AcmeBuds 15 Pro,Audio,Audio,True wireless earbuds with noise cancellation,343.41,USD,in_stock,12,30,true,2022-09-24T00:00:00Z,2024-10-03T00:00:00Z
+PROD-076,SKU-AUD-0076,SoundBar 31,Audio,Audio,"Home audio soundbar, 256W output",158.70,USD,in_stock,12,30,true,2024-02-26T00:00:00Z,2024-06-13T00:00:00Z
+PROD-077,SKU-AUD-0077,NovaSound BT6,Audio,Audio,"Bluetooth over-ear headphones, ANC",484.12,USD,in_stock,12,30,true,2023-01-26T00:00:00Z,2025-07-26T00:00:00Z
+PROD-078,SKU-AUD-0078,NovaSound BT39,Audio,Audio,"Bluetooth over-ear headphones, ANC",251.87,USD,in_stock,12,30,true,2023-02-18T00:00:00Z,2023-12-29T00:00:00Z
+PROD-079,SKU-AUD-0079,NovaSound BT54,Audio,Audio,"Bluetooth over-ear headphones, ANC",363.45,USD,out_of_stock,12,30,true,2023-12-13T00:00:00Z,2025-03-16T00:00:00Z
+PROD-080,SKU-AUD-0080,SoundBar 56,Audio,Audio,"Home audio soundbar, 128W output",255.93,USD,out_of_stock,12,30,true,2024-12-08T00:00:00Z,2025-08-22T00:00:00Z
+PROD-081,SKU-NET-0081,AcmeRouter 90,Networking,Networking,"WiFi 6 router, 8 sq ft coverage",150.38,USD,in_stock,12,30,true,2022-05-05T00:00:00Z,2023-05-29T00:00:00Z
+PROD-082,SKU-NET-0082,LinkPro 64,Networking,Networking,Gigabit network switch with 256 ports,235.36,USD,discontinued,12,30,false,2024-11-17T00:00:00Z,2025-02-09T00:00:00Z
+PROD-083,SKU-NET-0083,NetBoost 72 Pro,Networking,Networking,Mesh networking node,189.30,USD,in_stock,12,30,true,2023-07-11T00:00:00Z,2023-07-14T00:00:00Z
+PROD-084,SKU-NET-0084,AcmeRouter 76,Networking,Networking,"WiFi 6 router, 64 sq ft coverage",52.10,USD,in_stock,12,30,true,2024-11-16T00:00:00Z,2025-11-13T00:00:00Z
+PROD-085,SKU-NET-0085,LinkPro 39,Networking,Networking,Gigabit network switch with 64 ports,152.73,USD,in_stock,12,30,true,2023-07-04T00:00:00Z,2023-12-26T00:00:00Z
+PROD-086,SKU-NET-0086,AcmeRouter 38,Networking,Networking,"WiFi 6 router, 4 sq ft coverage",272.87,USD,out_of_stock,12,30,true,2023-07-23T00:00:00Z,2024-04-24T00:00:00Z
+PROD-087,SKU-NET-0087,AcmeRouter 27,Networking,Networking,"WiFi 6 router, 128 sq ft coverage",89.66,USD,in_stock,12,30,true,2023-12-13T00:00:00Z,2024-12-24T00:00:00Z
+PROD-088,SKU-NET-0088,NetBoost 93 Pro,Networking,Networking,Mesh networking node,191.92,USD,in_stock,12,30,true,2023-08-27T00:00:00Z,2023-10-24T00:00:00Z
+PROD-089,SKU-NET-0089,LinkPro 46,Networking,Networking,Gigabit network switch with 256 ports,304.67,USD,in_stock,12,30,true,2023-07-27T00:00:00Z,2023-08-12T00:00:00Z
+PROD-090,SKU-NET-0090,LinkPro 93,Networking,Networking,Gigabit network switch with 128 ports,289.84,USD,out_of_stock,12,30,true,2023-06-12T00:00:00Z,2025-03-22T00:00:00Z
+PROD-091,SKU-GAM-0091,ControlPad 57,Gaming,Gaming,Mechanical gaming keyboard,84.12,USD,in_stock,12,30,true,2023-02-22T00:00:00Z,2025-05-11T00:00:00Z
+PROD-092,SKU-GAM-0092,AcmePlay 94,Gaming,Gaming,Gaming controller with haptic feedback,102.76,USD,out_of_stock,12,30,true,2022-10-31T00:00:00Z,2023-05-10T00:00:00Z
+PROD-093,SKU-GAM-0093,GameEdge 24 Pro,Gaming,Gaming,Gaming headset with surround sound,61.11,USD,out_of_stock,12,30,true,2024-10-01T00:00:00Z,2025-01-01T00:00:00Z
+PROD-094,SKU-GAM-0094,ControlPad 40,Gaming,Gaming,Mechanical gaming keyboard,179.49,USD,in_stock,12,30,true,2024-03-18T00:00:00Z,2024-09-26T00:00:00Z
+PROD-095,SKU-GAM-0095,AcmePlay 55,Gaming,Gaming,Gaming controller with haptic feedback,106.35,USD,in_stock,12,30,true,2024-04-04T00:00:00Z,2025-09-25T00:00:00Z
+PROD-096,SKU-GAM-0096,AcmePlay 78,Gaming,Gaming,Gaming controller with haptic feedback,93.24,USD,in_stock,12,30,true,2022-02-12T00:00:00Z,2022-03-11T00:00:00Z
+PROD-097,SKU-GAM-0097,ControlPad 32,Gaming,Gaming,Mechanical gaming keyboard,43.21,USD,out_of_stock,12,30,true,2022-10-20T00:00:00Z,2022-11-16T00:00:00Z
+PROD-098,SKU-GAM-0098,AcmePlay 70,Gaming,Gaming,Gaming controller with haptic feedback,168.10,USD,in_stock,12,30,true,2022-06-24T00:00:00Z,2025-03-03T00:00:00Z
+PROD-099,SKU-GAM-0099,ControlPad 40,Gaming,Gaming,Mechanical gaming keyboard,110.41,USD,in_stock,12,30,true,2023-05-15T00:00:00Z,2025-04-22T00:00:00Z
+PROD-100,SKU-GAM-0100,GameEdge 3 Pro,Gaming,Gaming,Gaming headset with surround sound,46.48,USD,in_stock,12,30,true,2023-08-31T00:00:00Z,2024-10-29T00:00:00Z

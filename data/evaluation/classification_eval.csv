@@ -1,0 +1,201 @@
+eval_id,message,true_category,true_intent,true_priority,customer_segment,has_order_reference
+CLS-0001,I want to pay via invoice for my business account. How do I set up net-30 payment terms?,payments,payment_failure,P3,premium,true
+CLS-0002,My order was split into two shipments without any notification. When will the second one arrive?,orders,report_wrong_item,P3,business,true
+CLS-0003,I'm having trouble setting up my new device. The instructions aren't clear.,products,product_recommendation,P3,enterprise,true
+CLS-0004,The payment authorization failed even though my bank says the transaction was approved.,payments,payment_authorization_issue,P3,enterprise,true
+CLS-0005,I'm locked out of my account after too many failed login attempts. How do I unlock it?,account,account_locked,P3,premium,true
+CLS-0006,My order shows it shipped but I never received a tracking number via email. How can I find out where my package is?,shipping,report_failed_delivery,P2,premium,false
+CLS-0007,I made a bank transfer 24 days ago but my order is still showing payment pending.,payments,payment_authorization_issue,P2,premium,true
+CLS-0008,I want to remove a saved payment method from my account but can't find the option.,account,account_locked,P2,business,false
+CLS-0009,I need my order urgently. Can I upgrade the shipping method after placing the order?,orders,report_wrong_item,P3,enterprise,false
+CLS-0010,What exactly is covered under the standard warranty? I'm not sure if my issue qualifies.,warranty,warranty_claim,P3,premium,true
+CLS-0011,I was charged twice for the same order. I can see two identical transactions on my credit card statement.,refunds,report_duplicate_charge,P3,enterprise,false
+CLS-0012,I returned two items from the same order. I only received a refund for one. What happened to the other?,refunds,check_refund_status,P2,premium,true
+CLS-0013,I want to report a suspicious seller listing on your platform that seems fraudulent.,security,account_compromise,P1,standard,false
+CLS-0014,I have two accounts with the same email. I want to merge the order history into one account.,account,update_profile,P3,premium,true
+CLS-0015,I returned my order 6 days ago and I still haven't received my refund. Can you check the status?,refunds,request_refund,P3,standard,true
+CLS-0016,The payment authorization failed even though my bank says the transaction was approved.,payments,billing_inquiry,P2,premium,true
+CLS-0017,I'd like to extend my warranty before it expires. What options are available?,warranty,extend_warranty,P1,business,true
+CLS-0018,I need a product that can handle gaming. Which items in your catalog would you recommend?,products,product_recommendation,P2,enterprise,false
+CLS-0019,I accidentally ordered two of the same item. Can I modify the quantity to just one?,orders,check_order_status,P2,enterprise,true
+CLS-0020,I'd like to extend my warranty before it expires. What options are available?,warranty,extend_warranty,P3,business,true
+CLS-0021,I received a damaged item in my order. The packaging was intact but the product itself is cracked. I need to return it.,returns,check_return_eligibility,P2,enterprise,true
+CLS-0022,I need to change my delivery address. My order hasn't shipped yet — is it too late to update?,shipping,report_failed_delivery,P3,business,true
+CLS-0023,The delivery attempt failed because the driver couldn't access my building. I need to reschedule for when I'm home.,shipping,change_shipping_address,P2,standard,true
+CLS-0024,I'm concerned about how my personal data is being used. I want to request a copy of my data.,security,data_breach_concern,P1,standard,true
+CLS-0025,"I received a confirmation email but when I check my account, I don't see the order listed.",orders,modify_order,P2,premium,true
+CLS-0026,I ordered the wrong size/color variant. Can this be changed or do I need to cancel and reorder?,orders,report_wrong_item,P2,enterprise,false
+CLS-0027,I received a partial refund but I expected a full refund. Can you explain why it wasn't fully refunded?,refunds,report_duplicate_charge,P2,business,true
+CLS-0028,The product stopped working after just a week of normal use. This seems like a manufacturing defect.,returns,initiate_return,P2,business,false
+CLS-0029,My item arrived defective straight out of the box. I haven't even used it. What's the fastest way to get a replacement?,returns,report_defective_item,P2,enterprise,false
+CLS-0030,My refund was supposed to be processed 12 days ago according to your email. Still nothing in my account.,refunds,check_refund_status,P1,premium,false
+CLS-0031,I need to update my email address. The current one is from a job I no longer have.,account,account_locked,P1,premium,true
+CLS-0032,I want to return a gift I received. I have the order number but I'm not the original purchaser. Is that possible?,returns,initiate_return,P3,enterprise,true
+CLS-0033,I was charged a different amount than what was shown at checkout. There seems to be a discrepancy.,payments,billing_inquiry,P1,standard,true
+CLS-0034,I'm not receiving order confirmation emails even though my address is correct.,account,account_locked,P2,enterprise,true
+CLS-0035,My item arrived defective straight out of the box. I haven't even used it. What's the fastest way to get a replacement?,returns,initiate_return,P2,standard,false
+CLS-0036,The security question on my account has been changed without my knowledge.,security,account_compromise,P2,enterprise,false
+CLS-0037,I'd like to extend my warranty before it expires. What options are available?,warranty,check_warranty_status,P3,business,true
+CLS-0038,My product stopped working and it's still under the manufacturer's warranty. How do I file a claim?,warranty,warranty_replacement,P2,business,false
+CLS-0039,I opened the box but decided the product isn't what I need. Can I still return it even though it's been opened?,returns,report_defective_item,P2,premium,true
+CLS-0040,My credit card was charged by Acme Store but I haven't placed any orders recently.,security,fraud_report,P3,enterprise,true
+CLS-0041,The security question on my account has been changed without my knowledge.,security,fraud_report,P3,enterprise,true
+CLS-0042,I want to return a gift I received. I have the order number but I'm not the original purchaser. Is that possible?,returns,initiate_return,P2,enterprise,false
+CLS-0043,Is this product compatible with Mac OS? The listing only mentions Windows.,products,product_defect,P2,premium,false
+CLS-0044,I'm getting an error message saying my billing address doesn't match. I've confirmed it's correct.,payments,update_payment_method,P2,standard,true
+CLS-0045,I was charged twice for the same order. I can see two identical transactions on my credit card statement.,refunds,check_refund_status,P2,standard,false
+CLS-0046,My device won't turn on even after charging it fully overnight. I've tried holding the power button.,technical,software_issue,P2,standard,true
+CLS-0047,My order was split into two shipments without any notification. When will the second one arrive?,orders,check_order_status,P2,enterprise,false
+CLS-0048,My order shows as delivered but it only partially arrived — some items are missing.,orders,check_order_status,P2,enterprise,true
+CLS-0049,My credit card expired and I need to update my payment method for a pending order.,payments,update_payment_method,P2,premium,true
+CLS-0050,I'd like to return an item I received 9 days ago. It's not what I expected based on the product description.,returns,initiate_return,P2,premium,true
+CLS-0051,My credit card was charged by Acme Store but I haven't placed any orders recently.,security,account_compromise,P2,enterprise,false
+CLS-0052,"I disputed a charge and the bank said it was resolved, but I don't see the credit on my account yet.",refunds,partial_refund_request,P3,standard,true
+CLS-0053,I'd like to split my payment across two different cards. Is that an option?,payments,update_payment_method,P2,standard,false
+CLS-0054,I want to remove a saved payment method from my account but can't find the option.,account,password_reset,P3,premium,true
+CLS-0055,I have two accounts with the same email. I want to merge the order history into one account.,account,account_locked,P3,premium,false
+CLS-0056,My order shows as delivered but it only partially arrived — some items are missing.,orders,check_order_status,P2,business,true
+CLS-0057,My credit card expired and I need to update my payment method for a pending order.,payments,billing_inquiry,P2,standard,true
+CLS-0058,I can't get the Bluetooth pairing to work between my new device and my phone.,technical,software_issue,P2,standard,false
+CLS-0059,I was charged a different amount than what was shown at checkout. There seems to be a discrepancy.,payments,billing_inquiry,P2,premium,false
+CLS-0060,The product was replaced under warranty but I'm not satisfied with the replacement model.,warranty,extend_warranty,P2,standard,true
+CLS-0061,My warranty repair is taking longer than expected. When will I get my product back?,warranty,warranty_replacement,P3,enterprise,true
+CLS-0062,The refund amount doesn't match what I paid. I paid with a discount code — was that taken into account?,refunds,report_duplicate_charge,P3,premium,false
+CLS-0063,"I received a confirmation email but when I check my account, I don't see the order listed.",orders,cancel_order,P2,enterprise,true
+CLS-0064,I'm concerned about how my personal data is being used. I want to request a copy of my data.,security,unauthorized_access,P2,premium,true
+CLS-0065,The device is running very slowly after a recent software update. How do I roll back?,technical,compatibility_issue,P3,premium,true
+CLS-0066,I received a notification that my package was delivered but it's not here. Could it have been delivered to the wrong address?,shipping,report_failed_delivery,P2,premium,true
+CLS-0067,I need to cancel my order. I just placed it 106 minutes ago — is it possible to cancel before it ships?,orders,check_order_status,P3,premium,false
+CLS-0068,The payment authorization failed even though my bank says the transaction was approved.,payments,payment_authorization_issue,P2,business,true
+CLS-0069,I'd like to extend my warranty before it expires. What options are available?,warranty,check_warranty_status,P2,business,true
+CLS-0070,I received a damaged item in my order. The packaging was intact but the product itself is cracked. I need to return it.,returns,check_return_eligibility,P2,enterprise,true
+CLS-0071,My item arrived defective straight out of the box. I haven't even used it. What's the fastest way to get a replacement?,returns,return_status,P2,enterprise,false
+CLS-0072,I want to return a gift I received. I have the order number but I'm not the original purchaser. Is that possible?,returns,return_status,P2,enterprise,false
+CLS-0073,I accidentally ordered two of the same item. Can I modify the quantity to just one?,orders,cancel_order,P2,enterprise,true
+CLS-0074,I need to change my delivery address. My order hasn't shipped yet — is it too late to update?,shipping,change_shipping_address,P2,business,true
+CLS-0075,I can't log into my account. I've tried resetting my password but I'm not receiving the reset email.,account,password_reset,P3,standard,true
+CLS-0076,I purchased a smartphone 30 days ago. I know electronics have a shorter return window — am I still eligible?,returns,report_damaged_item,P2,enterprise,true
+CLS-0077,The payment authorization failed even though my bank says the transaction was approved.,payments,payment_authorization_issue,P2,enterprise,true
+CLS-0078,I ordered express shipping but it's been 30 days and still nothing. This should have arrived already.,shipping,report_delayed_delivery,P1,business,true
+CLS-0079,I need to change my delivery address. My order hasn't shipped yet — is it too late to update?,shipping,change_shipping_address,P2,standard,true
+CLS-0080,I received a package I didn't order to my address. I'm worried someone is using my information.,security,fraud_report,P1,business,true
+CLS-0081,I need to check if my product is still under warranty. I've had it for about 21 months.,warranty,warranty_claim,P2,standard,true
+CLS-0082,I'm not receiving order confirmation emails even though my address is correct.,account,update_profile,P2,premium,true
+CLS-0083,The camera on my device is producing blurry images even in good lighting conditions.,technical,hardware_malfunction,P1,standard,true
+CLS-0084,"My warranty claim was rejected but I believe the damage is a manufacturing defect, not user damage.",warranty,extend_warranty,P3,enterprise,true
+CLS-0085,I lost my proof of purchase. Can I still make a warranty claim using my order number?,warranty,check_warranty_status,P1,business,true
+CLS-0086,The carrier attempted delivery but I wasn't home. I haven't been able to reschedule a redelivery through their site.,shipping,report_lost_package,P1,business,true
+CLS-0087,The laptop I bought 21 days ago isn't working properly. I'd like to initiate a return. Is it within the return window?,returns,initiate_return,P2,business,true
+CLS-0088,I received a notification that my package was delivered but it's not here. Could it have been delivered to the wrong address?,shipping,track_shipment,P2,premium,true
+CLS-0089,My PayPal payment shows as completed on PayPal's side but my order still shows payment pending.,payments,update_payment_method,P3,standard,false
+CLS-0090,I purchased the product as a gift. The recipient wants to register the warranty — is that possible?,warranty,warranty_replacement,P3,premium,true
+CLS-0091,My device won't turn on even after charging it fully overnight. I've tried holding the power button.,technical,software_issue,P1,standard,false
+CLS-0092,I noticed several unauthorized purchases on my account that I didn't make. I need help immediately.,security,suspicious_activity,P3,standard,true
+CLS-0093,I ordered express shipping but it's been 14 days and still nothing. This should have arrived already.,shipping,report_failed_delivery,P3,standard,true
+CLS-0094,The product description says it includes a charging cable but mine didn't come with one.,products,product_defect,P2,premium,true
+CLS-0095,I need to change my delivery address. My order hasn't shipped yet — is it too late to update?,shipping,report_lost_package,P3,business,true
+CLS-0096,I want to pay via invoice for my business account. How do I set up net-30 payment terms?,payments,invoice_request,P2,enterprise,true
+CLS-0097,I opened the box but decided the product isn't what I need. Can I still return it even though it's been opened?,returns,report_damaged_item,P2,business,true
+CLS-0098,I want to report a suspicious seller listing on your platform that seems fraudulent.,security,fraud_report,P2,enterprise,true
+CLS-0099,I received an email claiming to be from Acme Store asking for my password. I think it's a phishing attempt.,security,unauthorized_access,P3,premium,true
+CLS-0100,The device is running very slowly after a recent software update. How do I roll back?,technical,setup_issue,P2,premium,true
+CLS-0101,The product stopped working after just a week of normal use. This seems like a manufacturing defect.,returns,initiate_return,P3,business,true
+CLS-0102,I purchased the product as a gift. The recipient wants to register the warranty — is that possible?,warranty,warranty_replacement,P0,enterprise,false
+CLS-0103,My payment keeps failing at checkout even though my card details are correct and I have sufficient funds.,payments,invoice_request,P1,business,true
+CLS-0104,Someone appears to have used my account to place orders. I need all recent orders cancelled.,security,data_breach_concern,P1,standard,true
+CLS-0105,My credit card expired and I need to update my payment method for a pending order.,payments,invoice_request,P3,business,false
+CLS-0106,I cancelled my order within minutes of placing it but I was still charged. When will I receive my refund?,refunds,request_refund,P3,enterprise,true
+CLS-0107,My order shows as processing but I haven't received any shipping confirmation email yet.,orders,check_order_status,P0,standard,false
+CLS-0108,The payment authorization failed even though my bank says the transaction was approved.,payments,update_payment_method,P2,standard,true
+CLS-0109,The carrier attempted delivery but I wasn't home. I haven't been able to reschedule a redelivery through their site.,shipping,report_lost_package,P2,standard,true
+CLS-0110,I'm getting error code E-649 when trying to use the device. What does this mean?,technical,hardware_malfunction,P2,standard,true
+CLS-0111,I received a partial refund but I expected a full refund. Can you explain why it wasn't fully refunded?,refunds,check_refund_status,P2,business,true
+CLS-0112,I need to check if my product is still under warranty. I've had it for about 20 months.,warranty,warranty_replacement,P2,standard,false
+CLS-0113,I'm having trouble setting up my new device. The instructions aren't clear.,products,product_registration,P2,business,true
+CLS-0114,I want to report a suspicious seller listing on your platform that seems fraudulent.,security,fraud_report,P2,business,true
+CLS-0115,I followed the setup instructions but the device isn't being recognized by my computer.,technical,connectivity_problem,P2,standard,true
+CLS-0116,I can't get the Bluetooth pairing to work between my new device and my phone.,technical,setup_issue,P2,business,true
+CLS-0117,I want to close my account and delete all my personal data. What's the process?,account,account_security,P2,business,true
+CLS-0118,I need to change my delivery address. My order hasn't shipped yet — is it too late to update?,shipping,report_delayed_delivery,P2,premium,true
+CLS-0119,I want to enable two-factor authentication on my account. How do I set it up?,security,data_breach_concern,P3,premium,true
+CLS-0120,Someone tried to access my account from an unfamiliar location. I received a security alert.,account,update_profile,P2,enterprise,true
+CLS-0121,My order was split into two shipments without any notification. When will the second one arrive?,orders,modify_order,P0,premium,true
+CLS-0122,I need to cancel my order. I just placed it 92 minutes ago — is it possible to cancel before it ships?,orders,cancel_order,P2,premium,true
+CLS-0123,I received a partial refund but I expected a full refund. Can you explain why it wasn't fully refunded?,refunds,request_refund,P2,standard,true
+CLS-0124,The device is running very slowly after a recent software update. How do I roll back?,technical,connectivity_problem,P1,enterprise,false
+CLS-0125,The specs say the battery lasts 8 hours but mine barely lasts 3. Is this a defect?,products,product_inquiry,P3,premium,true
+CLS-0126,I'm getting error code E-603 when trying to use the device. What does this mean?,technical,software_issue,P3,enterprise,true
+CLS-0127,I can't get the Bluetooth pairing to work between my new device and my phone.,technical,connectivity_problem,P3,standard,true
+CLS-0128,I have two accounts with the same email. I want to merge the order history into one account.,account,close_account,P3,enterprise,false
+CLS-0129,I cancelled my order within minutes of placing it but I was still charged. When will I receive my refund?,refunds,dispute_charge,P3,business,true
+CLS-0130,I'm locked out of my account after too many failed login attempts. How do I unlock it?,account,account_security,P2,enterprise,true
+CLS-0131,I'm an enterprise customer. I have a large order I need to return — what's the process for bulk returns?,returns,return_status,P3,enterprise,false
+CLS-0132,One item from my multi-item order arrived but the other is still showing as processing.,orders,modify_order,P3,standard,true
+CLS-0133,"I disputed a charge and the bank said it was resolved, but I don't see the credit on my account yet.",refunds,check_refund_status,P3,premium,true
+CLS-0134,I need to update my email address. The current one is from a job I no longer have.,account,password_reset,P2,business,false
+CLS-0135,I received a package I didn't order to my address. I'm worried someone is using my information.,security,data_breach_concern,P3,enterprise,true
+CLS-0136,My account seems to have been hacked. I see order history for purchases I didn't make.,account,account_locked,P1,standard,true
+CLS-0137,"My warranty claim was rejected but I believe the damage is a manufacturing defect, not user damage.",warranty,warranty_replacement,P2,premium,false
+CLS-0138,I'm getting error code E-246 when trying to use the device. What does this mean?,technical,software_issue,P2,enterprise,false
+CLS-0139,I was charged twice for the same order. I can see two identical transactions on my credit card statement.,refunds,check_refund_status,P3,business,true
+CLS-0140,I was charged twice for the same order. I can see two identical transactions on my credit card statement.,refunds,request_refund,P2,standard,false
+CLS-0141,I need my order urgently. Can I upgrade the shipping method after placing the order?,orders,cancel_order,P3,standard,true
+CLS-0142,My credit card expired and I need to update my payment method for a pending order.,payments,billing_inquiry,P3,standard,true
+CLS-0143,I need to register my new product for warranty purposes. The registration link in the box doesn't work.,products,product_defect,P2,enterprise,true
+CLS-0144,I'm not receiving order confirmation emails even though my address is correct.,account,update_profile,P2,enterprise,false
+CLS-0145,The security question on my account has been changed without my knowledge.,security,suspicious_activity,P3,premium,true
+CLS-0146,"I received a confirmation email but when I check my account, I don't see the order listed.",orders,check_order_status,P2,business,true
+CLS-0147,I need to update my email address. The current one is from a job I no longer have.,account,update_profile,P2,standard,true
+CLS-0148,I placed an order 6 days ago and it's still in processing status. When will it ship?,orders,modify_order,P2,business,true
+CLS-0149,I placed an order 19 days ago and it's still in processing status. When will it ship?,orders,check_order_status,P2,business,false
+CLS-0150,My account seems to have been hacked. I see order history for purchases I didn't make.,account,account_security,P2,business,false
+CLS-0151,I'm having trouble setting up my new device. The instructions aren't clear.,products,product_registration,P2,premium,true
+CLS-0152,The refund amount doesn't match what I paid. I paid with a discount code — was that taken into account?,refunds,dispute_charge,P3,premium,true
+CLS-0153,I'd like to extend my warranty before it expires. What options are available?,warranty,check_warranty_status,P2,enterprise,false
+CLS-0154,I received the wrong item in my shipment. I ordered a blue model but got a red one. Can I exchange or return it?,returns,return_status,P2,enterprise,true
+CLS-0155,I'd like to extend my warranty before it expires. What options are available?,warranty,warranty_replacement,P2,enterprise,false
+CLS-0156,The product description says it includes a charging cable but mine didn't come with one.,products,product_defect,P2,standard,false
+CLS-0157,My credit card was charged by Acme Store but I haven't placed any orders recently.,security,account_compromise,P1,enterprise,true
+CLS-0158,I received a partial refund but I expected a full refund. Can you explain why it wasn't fully refunded?,refunds,check_refund_status,P3,business,false
+CLS-0159,I opened the box but decided the product isn't what I need. Can I still return it even though it's been opened?,returns,report_defective_item,P3,business,true
+CLS-0160,I need my order urgently. Can I upgrade the shipping method after placing the order?,orders,report_wrong_item,P3,standard,true
+CLS-0161,I received an email claiming to be from Acme Store asking for my password. I think it's a phishing attempt.,security,account_compromise,P2,business,true
+CLS-0162,The product stopped working after just a week of normal use. This seems like a manufacturing defect.,returns,initiate_return,P3,enterprise,true
+CLS-0163,I'm getting error code E-197 when trying to use the device. What does this mean?,technical,compatibility_issue,P3,enterprise,true
+CLS-0164,I need to cancel my order. I just placed it 41 minutes ago — is it possible to cancel before it ships?,orders,report_wrong_item,P1,business,true
+CLS-0165,I have two accounts with the same email. I want to merge the order history into one account.,account,account_security,P3,premium,true
+CLS-0166,Someone tried to access my account from an unfamiliar location. I received a security alert.,account,update_profile,P3,business,true
+CLS-0167,"I received a confirmation email but when I check my account, I don't see the order listed.",orders,modify_order,P2,enterprise,true
+CLS-0168,I returned my order 22 days ago and I still haven't received my refund. Can you check the status?,refunds,dispute_charge,P3,premium,true
+CLS-0169,The product was replaced under warranty but I'm not satisfied with the replacement model.,warranty,extend_warranty,P3,enterprise,false
+CLS-0170,The display has dead pixels. I noticed them right after unboxing. This seems like a defect.,technical,software_issue,P0,enterprise,false
+CLS-0171,The security question on my account has been changed without my knowledge.,security,account_compromise,P2,enterprise,false
+CLS-0172,My warranty repair is taking longer than expected. When will I get my product back?,warranty,check_warranty_status,P2,enterprise,true
+CLS-0173,My order shows as delivered but it only partially arrived — some items are missing.,orders,report_wrong_item,P2,standard,false
+CLS-0174,My warranty repair is taking longer than expected. When will I get my product back?,warranty,warranty_claim,P2,enterprise,true
+CLS-0175,The refund amount doesn't match what I paid. I paid with a discount code — was that taken into account?,refunds,dispute_charge,P2,enterprise,true
+CLS-0176,My credit card expired and I need to update my payment method for a pending order.,payments,update_payment_method,P2,enterprise,false
+CLS-0177,I want to pay via invoice for my business account. How do I set up net-30 payment terms?,payments,payment_failure,P2,premium,false
+CLS-0178,I need to check if my product is still under warranty. I've had it for about 17 months.,warranty,extend_warranty,P2,enterprise,true
+CLS-0179,I can't log into my account. I've tried resetting my password but I'm not receiving the reset email.,account,account_security,P2,business,true
+CLS-0180,The product stopped working after just a week of normal use. This seems like a manufacturing defect.,returns,report_defective_item,P2,enterprise,true
+CLS-0181,My credit card was charged by Acme Store but I haven't placed any orders recently.,security,fraud_report,P3,standard,true
+CLS-0182,I received a notification that my package was delivered but it's not here. Could it have been delivered to the wrong address?,shipping,track_shipment,P2,standard,true
+CLS-0183,My order shows as delivered but it only partially arrived — some items are missing.,orders,cancel_order,P1,premium,false
+CLS-0184,I need to cancel my order. I just placed it 19 minutes ago — is it possible to cancel before it ships?,orders,report_wrong_item,P2,business,true
+CLS-0185,What exactly is covered under the standard warranty? I'm not sure if my issue qualifies.,warranty,warranty_replacement,P2,premium,true
+CLS-0186,I need to check if my product is still under warranty. I've had it for about 15 months.,warranty,warranty_claim,P2,enterprise,false
+CLS-0187,My package has been stuck at the same location for 16 days. The tracking info hasn't updated at all.,shipping,report_delayed_delivery,P2,premium,true
+CLS-0188,I need to know if I can use this device in a country with different voltage standards.,products,product_registration,P2,standard,true
+CLS-0189,The software keeps crashing whenever I try to open a specific feature. I've tried reinstalling.,technical,setup_issue,P3,premium,true
+CLS-0190,The product was repaired under warranty but the same issue has returned. What are my options?,warranty,extend_warranty,P3,standard,false
+CLS-0191,I lost my proof of purchase. Can I still make a warranty claim using my order number?,warranty,check_warranty_status,P2,enterprise,false
+CLS-0192,My order shows as processing but I haven't received any shipping confirmation email yet.,orders,missing_item,P1,enterprise,true
+CLS-0193,I'd like to return an item I received 15 days ago. It's not what I expected based on the product description.,returns,initiate_return,P2,enterprise,true
+CLS-0194,"I received a confirmation email but when I check my account, I don't see the order listed.",orders,cancel_order,P2,premium,true
+CLS-0195,My credit card was charged by Acme Store but I haven't placed any orders recently.,security,account_compromise,P3,standard,true
+CLS-0196,I need to cancel my order. I just placed it 97 minutes ago — is it possible to cancel before it ships?,orders,modify_order,P2,standard,false
+CLS-0197,"My tracking shows 'delivered' but I never received my package. I checked with my neighbors and the front desk, no sign of it.",shipping,report_failed_delivery,P2,standard,true
+CLS-0198,I want to report a suspicious seller listing on your platform that seems fraudulent.,security,unauthorized_access,P1,standard,true
+CLS-0199,I received a damaged item in my order. The packaging was intact but the product itself is cracked. I need to return it.,returns,check_return_eligibility,P1,enterprise,true
+CLS-0200,I returned my order 27 days ago and I still haven't received my refund. Can you check the status?,refunds,partial_refund_request,P3,enterprise,true
