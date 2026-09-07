@@ -16,8 +16,9 @@ pydantic = "^2.5.0"
 pydantic-settings = "^2.1.0"
 
 # Database
+asyncpg = "^0.29.0"
 psycopg2-binary = "^2.9.0"
-sqlalchemy = "^2.0.0"
+sqlalchemy = {version = "^2.0.0", extras = ["asyncio"]}
 alembic = "^1.12.0"
 pgvector = "^0.2.4"
 
@@ -129,6 +130,7 @@ minversion = "7.0"
 addopts = "-v --strict-markers --cov=src --cov-report=term-and-html"
 testpaths = ["tests"]
 pythonpath = ["src"]
+asyncio_mode = "auto"
 markers = [
     "unit: unit tests",
     "integration: integration tests",
