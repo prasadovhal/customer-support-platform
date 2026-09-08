@@ -40,6 +40,8 @@ def _build_engine():
         pool_timeout=settings.DATABASE_POOL_TIMEOUT,
         echo=settings.DEBUG,
         future=True,
+        pool_pre_ping=True,
+        pool_recycle=3600,
     )
 
 
