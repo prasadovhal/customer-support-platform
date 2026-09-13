@@ -128,6 +128,7 @@ async def post_message(
 
     # 6. Run the agent workflow.
     customer_id = str(conv.customer_id) if conv.customer_id else None
+    order_id = str(body.order_id) if body.order_id else None
     try:
         agent_result = await run_agent(
             message=body.message,
@@ -135,6 +136,7 @@ async def post_message(
             customer_id=customer_id,
             db=db,
             history=history,
+            order_id=order_id,
         )
     except Exception as exc:
         logger.error(f"Agent failed for conversation {conversation_id}: {exc}")

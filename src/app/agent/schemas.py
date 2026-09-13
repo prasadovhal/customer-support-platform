@@ -18,6 +18,7 @@ class AgentState(TypedDict, total=False):
     customer_id: Optional[str]
     message: str
     history: list[dict[str, str]]
+    order_id: Optional[str]
 
     # Filled by classify node
     intent: Optional[str]
@@ -29,6 +30,9 @@ class AgentState(TypedDict, total=False):
     retrieved_doc_ids: list[str]
     context_text: str
     sources: list[dict[str, Any]]
+
+    # Filled by handle_action node
+    approval_result: Optional[dict[str, Any]]
 
     # Filled by generate node
     response: Optional[str]
