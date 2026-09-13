@@ -4,6 +4,9 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
+from typing import Any
+
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import Boolean, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -111,6 +114,8 @@ class EmbeddingMetadata(Base):
         nullable=False,
         server_default=text("now()"),
     )
+    # Actual 768-dim vector — populated by the RAG ingestion pipeline (migration 002)
+    embedding: Mapped[Optional[Any]] = mapped_column(Vector(768), nullable=True)
 
     # Relationships
     chunk: Mapped["KnowledgeChunk"] = relationship(

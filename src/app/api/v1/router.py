@@ -11,6 +11,7 @@ from app.api.v1 import (
     messages,
     ml,
     orders,
+    rag,
     tickets,
     webhooks,
 )
@@ -32,3 +33,4 @@ v1_router.include_router(orders.router)
 v1_router.include_router(approvals.router)
 v1_router.include_router(webhooks.router)
 v1_router.include_router(ml.router)
+v1_router.include_router(rag.router)
