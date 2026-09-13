@@ -9,6 +9,7 @@ from app.api.v1 import (
     customers,
     health,
     messages,
+    ml,
     orders,
     tickets,
     webhooks,
@@ -30,3 +31,4 @@ v1_router.include_router(customers.router)
 v1_router.include_router(orders.router)
 v1_router.include_router(approvals.router)
 v1_router.include_router(webhooks.router)
+v1_router.include_router(ml.router)
