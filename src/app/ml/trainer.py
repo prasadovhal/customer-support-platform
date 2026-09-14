@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any, Optional
 
 import joblib
-import numpy as np
 import pandas as pd
 from loguru import logger
 from sklearn.model_selection import train_test_split
@@ -72,13 +71,17 @@ class ModelTrainer:
         pipeline.fit(X_train, y_train)
 
         val_report = self.evaluator.evaluate(
-            pipeline, X_val, y_val,
+            pipeline,
+            X_val,
+            y_val,
             task_name=config.name,
             model_type=model_type,
             dataset="val",
         )
         test_report = self.evaluator.evaluate(
-            pipeline, X_test, y_test,
+            pipeline,
+            X_test,
+            y_test,
             task_name=config.name,
             model_type=model_type,
             dataset="test",

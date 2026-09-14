@@ -1,10 +1,7 @@
 from __future__ import annotations
 
 import os
-import uuid
 from collections.abc import AsyncGenerator
-from typing import Any
-from unittest.mock import patch
 
 import pytest
 import pytest_asyncio
@@ -38,6 +35,7 @@ from app.main import app  # noqa: E402
 @pytest.fixture(scope="session")
 def event_loop():
     import asyncio
+
     loop = asyncio.new_event_loop()
     yield loop
     loop.close()
@@ -74,6 +72,7 @@ async def create_tables(test_engine):
     Skips gracefully if the database is not reachable (e.g. Docker not running).
     """
     import pytest
+
     try:
         async with test_engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)

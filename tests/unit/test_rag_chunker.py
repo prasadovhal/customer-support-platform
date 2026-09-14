@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 from textwrap import dedent
 
-import pytest
 
 from app.rag.chunker import (
     CHUNK_SIZE,
@@ -14,7 +13,8 @@ from app.rag.chunker import (
 )
 
 
-SAMPLE_ARTICLE = dedent("""\
+SAMPLE_ARTICLE = dedent(
+    """\
     ---
     document_id: KB-TEST-001
     title: Test Return Policy
@@ -39,7 +39,8 @@ SAMPLE_ARTICLE = dedent("""\
     The following cannot be returned:
     - Digital downloads
     - Perishable goods
-""")
+"""
+)
 
 
 def test_parse_article_extracts_metadata(tmp_path: Path) -> None:
@@ -87,7 +88,9 @@ def test_chunk_document_respects_chunk_size() -> None:
     doc = ParsedDocument(path="test.md", metadata={}, body=long_body)
     chunks = chunk_document(doc)
     for chunk in chunks:
-        assert len(chunk.text) <= CHUNK_SIZE * 1.2  # allow small overage at word boundaries
+        assert (
+            len(chunk.text) <= CHUNK_SIZE * 1.2
+        )  # allow small overage at word boundaries
 
 
 def test_chunk_document_token_count_estimated() -> None:

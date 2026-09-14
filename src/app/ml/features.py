@@ -5,8 +5,16 @@ import pandas as pd
 
 # Canonical category values from the training data
 CATEGORIES = [
-    "account", "orders", "payments", "products", "refunds",
-    "returns", "security", "shipping", "technical", "warranty",
+    "account",
+    "orders",
+    "payments",
+    "products",
+    "refunds",
+    "returns",
+    "security",
+    "shipping",
+    "technical",
+    "warranty",
 ]
 
 PRIORITIES = ["P0", "P1", "P2", "P3"]
@@ -14,8 +22,12 @@ PRIORITIES = ["P0", "P1", "P2", "P3"]
 SENTIMENTS = ["angry", "negative", "neutral", "positive"]
 
 TEAMS = [
-    "account_support", "billing_support", "orders_support",
-    "returns_support", "security_support", "shipping_support",
+    "account_support",
+    "billing_support",
+    "orders_support",
+    "returns_support",
+    "security_support",
+    "shipping_support",
     "technical_support",
 ]
 

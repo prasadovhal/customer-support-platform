@@ -24,9 +24,7 @@ async def login(
 
     Returns access and refresh tokens on success.
     """
-    result = await db.execute(
-        select(Customer).where(Customer.email == form.username)
-    )
+    result = await db.execute(select(Customer).where(Customer.email == form.username))
     customer = result.scalar_one_or_none()
 
     if customer is None or not verify_password(form.password, customer.hashed_password):
@@ -76,9 +74,7 @@ async def refresh(
         raise AuthenticationError(message="Token subject no longer exists.")
 
     if customer.account_status != "active":
-        raise AuthenticationError(
-            message=f"Account is {customer.account_status}."
-        )
+        raise AuthenticationError(message=f"Account is {customer.account_status}.")
 
     settings = get_settings()
     subject = str(customer.id)

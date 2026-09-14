@@ -27,7 +27,9 @@ class PaginatedResponse(BaseModel, Generic[T]):
         cls, items: list[T], total: int, page: int, page_size: int
     ) -> "PaginatedResponse[T]":
         pages = max(1, math.ceil(total / page_size)) if page_size > 0 else 1
-        return cls(items=items, total=total, page=page, page_size=page_size, pages=pages)
+        return cls(
+            items=items, total=total, page=page, page_size=page_size, pages=pages
+        )
 
 
 class ErrorResponse(BaseModel):

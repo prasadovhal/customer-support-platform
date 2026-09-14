@@ -68,7 +68,10 @@ class Order(Base, TimestampMixin):
         "Customer", back_populates="orders"
     )
     items: Mapped[list["OrderItem"]] = relationship(
-        "OrderItem", back_populates="order", lazy="selectin", cascade="all, delete-orphan"
+        "OrderItem",
+        back_populates="order",
+        lazy="selectin",
+        cascade="all, delete-orphan",
     )
     approval_requests: Mapped[list["ApprovalRequest"]] = relationship(  # noqa: F821
         "ApprovalRequest", back_populates="order", lazy="select"

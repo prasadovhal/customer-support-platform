@@ -33,7 +33,9 @@ class TestPostMessage:
         conv = await make_conversation(customer.id)
         token = _customer_token(str(customer.id))
 
-        with patch("app.api.v1.messages.run_agent", new=AsyncMock(return_value=_MOCK_RESULT)):
+        with patch(
+            "app.api.v1.messages.run_agent", new=AsyncMock(return_value=_MOCK_RESULT)
+        ):
             resp = await async_client.post(
                 f"/api/v1/conversations/{conv.id}/messages",
                 json={"message": "Where is my order?"},
@@ -54,7 +56,9 @@ class TestPostMessage:
         conv = await make_conversation(customer.id)
         token = _agent_token()
 
-        with patch("app.api.v1.messages.run_agent", new=AsyncMock(return_value=_MOCK_RESULT)):
+        with patch(
+            "app.api.v1.messages.run_agent", new=AsyncMock(return_value=_MOCK_RESULT)
+        ):
             resp = await async_client.post(
                 f"/api/v1/conversations/{conv.id}/messages",
                 json={"message": "Checking on behalf of customer"},
@@ -71,7 +75,9 @@ class TestPostMessage:
         conv = await make_conversation(owner.id)
         token = _customer_token(str(intruder.id))
 
-        with patch("app.api.v1.messages.run_agent", new=AsyncMock(return_value=_MOCK_RESULT)):
+        with patch(
+            "app.api.v1.messages.run_agent", new=AsyncMock(return_value=_MOCK_RESULT)
+        ):
             resp = await async_client.post(
                 f"/api/v1/conversations/{conv.id}/messages",
                 json={"message": "snoop"},
@@ -86,7 +92,9 @@ class TestPostMessage:
         customer = await make_customer()
         token = _customer_token(str(customer.id))
 
-        with patch("app.api.v1.messages.run_agent", new=AsyncMock(return_value=_MOCK_RESULT)):
+        with patch(
+            "app.api.v1.messages.run_agent", new=AsyncMock(return_value=_MOCK_RESULT)
+        ):
             resp = await async_client.post(
                 f"/api/v1/conversations/{uuid.uuid4()}/messages",
                 json={"message": "hello"},
@@ -117,7 +125,9 @@ class TestPostMessage:
         token = _customer_token(str(customer.id))
         key = str(uuid.uuid4())
 
-        with patch("app.api.v1.messages.run_agent", new=AsyncMock(return_value=_MOCK_RESULT)):
+        with patch(
+            "app.api.v1.messages.run_agent", new=AsyncMock(return_value=_MOCK_RESULT)
+        ):
             r1 = await async_client.post(
                 f"/api/v1/conversations/{conv.id}/messages",
                 json={"message": "Hello"},

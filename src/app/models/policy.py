@@ -4,7 +4,15 @@ import uuid
 from datetime import datetime
 from typing import Any, Optional
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Index, String, UniqueConstraint, text
+from sqlalchemy import (
+    Boolean,
+    DateTime,
+    ForeignKey,
+    Index,
+    String,
+    UniqueConstraint,
+    text,
+)
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -32,9 +40,7 @@ class Policy(Base, TimestampMixin):
     type: Mapped[str] = mapped_column(
         String, nullable=False
     )  # cancellation_threshold, return_window, high_risk_categories, etc.
-    key: Mapped[str] = mapped_column(
-        String, nullable=False
-    )  # specific key within type
+    key: Mapped[str] = mapped_column(String, nullable=False)  # specific key within type
     value: Mapped[Any] = mapped_column(
         JSONB, nullable=False
     )  # the policy value (numeric, list, etc.)

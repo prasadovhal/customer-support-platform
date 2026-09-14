@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import uuid
-from decimal import Decimal
 
 import pytest
 from httpx import AsyncClient
@@ -78,11 +77,13 @@ class TestCreateApproval:
             "idempotency_key": key,
         }
         r1 = await async_client.post(
-            "/api/v1/approvals", json=payload,
+            "/api/v1/approvals",
+            json=payload,
             headers={"Authorization": f"Bearer {token}"},
         )
         r2 = await async_client.post(
-            "/api/v1/approvals", json=payload,
+            "/api/v1/approvals",
+            json=payload,
             headers={"Authorization": f"Bearer {token}"},
         )
         assert r1.status_code == 201

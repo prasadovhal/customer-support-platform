@@ -40,9 +40,7 @@ async def get_customer(
             )
         )
     elif token.type == "agent":
-        result = await db.execute(
-            select(Customer).where(Customer.id == customer_id)
-        )
+        result = await db.execute(select(Customer).where(Customer.id == customer_id))
     else:
         raise AuthorizationError(message="Unsupported token type.")
 

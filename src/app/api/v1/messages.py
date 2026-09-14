@@ -142,6 +142,7 @@ async def post_message(
         logger.error(f"Agent failed for conversation {conversation_id}: {exc}")
         from app.agent.workflow import _FALLBACK_RESPONSE
         from app.agent.schemas import AgentResult
+
         agent_result = AgentResult(response=_FALLBACK_RESPONSE)
 
     # 7. Persist the assistant reply with all metadata.

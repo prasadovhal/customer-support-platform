@@ -5,7 +5,6 @@ All DB and LLM interactions are mocked so tests run without any external service
 from __future__ import annotations
 
 import uuid
-from typing import Any, Optional
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -50,7 +49,9 @@ async def test_ollama_client_chat_success():
 def test_build_user_prompt_with_context():
     from app.agent.prompts import build_user_prompt
 
-    prompt = build_user_prompt("What is the return policy?", "Returns allowed within 30 days.")
+    prompt = build_user_prompt(
+        "What is the return policy?", "Returns allowed within 30 days."
+    )
     assert "return policy" in prompt.lower()
     assert "30 days" in prompt
 
@@ -199,7 +200,6 @@ def test_keyword_intent_fallback():
 @pytest.mark.asyncio
 async def test_run_agent_llm_failure_returns_fallback():
     """When the LLM raises, run_agent should return the fallback response."""
-    from app.agent.llm import LLMClient
     from app.agent.workflow import run_agent, _FALLBACK_RESPONSE
 
     class FailingLLM:
@@ -273,9 +273,9 @@ async def test_run_agent_with_rag_context():
     mock_pipeline._retriever = MagicMock()
     mock_pipeline._retriever.build_bm25_from_db = AsyncMock()
 
-    with patch("app.api.v1.rag._get_pipeline", return_value=mock_pipeline), \
-         patch("app.api.v1.rag._bm25_built", True):
-
+    with patch("app.api.v1.rag._get_pipeline", return_value=mock_pipeline), patch(
+        "app.api.v1.rag._bm25_built", True
+    ):
         result = await run_agent(
             message="What is the return policy?",
             conversation_id=str(uuid.uuid4()),

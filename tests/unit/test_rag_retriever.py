@@ -1,9 +1,5 @@
 from __future__ import annotations
 
-from unittest.mock import AsyncMock, MagicMock, patch
-
-import numpy as np
-import pytest
 
 from app.rag.bm25_index import BM25Index, BM25Result, _tokenize
 from app.rag.pipeline import _build_context
@@ -11,6 +7,7 @@ from app.rag.retriever import RetrievalResult, _rrf_score
 
 
 # ---------- RRF scoring ----------
+
 
 def test_rrf_score_single_retriever() -> None:
     score = _rrf_score([1])
@@ -36,6 +33,7 @@ def test_rrf_score_only_non_none_ranks_counted() -> None:
 
 # ---------- BM25 index ----------
 
+
 def _make_records(texts: list[str]) -> list[BM25Result]:
     return [
         BM25Result(
@@ -52,11 +50,13 @@ def _make_records(texts: list[str]) -> list[BM25Result]:
 
 
 def test_bm25_build_and_search() -> None:
-    records = _make_records([
-        "return policy 30 days refund",
-        "shipping tracking delivery",
-        "account password reset security",
-    ])
+    records = _make_records(
+        [
+            "return policy 30 days refund",
+            "shipping tracking delivery",
+            "account password reset security",
+        ]
+    )
     index = BM25Index()
     index.build(records)
     results = index.search("return refund policy", top_k=3)
@@ -88,7 +88,10 @@ def test_tokenize_removes_stopwords() -> None:
 
 # ---------- Context building ----------
 
-def _make_result(text: str, title: str = "Doc", category: str = "returns") -> RetrievalResult:
+
+def _make_result(
+    text: str, title: str = "Doc", category: str = "returns"
+) -> RetrievalResult:
     return RetrievalResult(
         chunk_id="x",
         chunk_index=0,

@@ -35,15 +35,15 @@ _ACTIONABLE_INTENTS = frozenset({"return_refund", "cancel_order"})
 
 # Simple keyword heuristic when ML model is unavailable
 _INTENT_KEYWORDS: dict[str, list[str]] = {
-    "order_status":  ["order", "tracking", "shipped", "delivery", "track"],
+    "order_status": ["order", "tracking", "shipped", "delivery", "track"],
     "return_refund": ["return", "refund", "exchange", "send back"],
-    "cancel_order":  ["cancel", "cancellation", "cancel my order"],
-    "billing":       ["charge", "invoice", "payment", "bill", "receipt"],
-    "product_info":  ["product", "item", "spec", "warranty", "how does"],
-    "shipping":      ["ship", "shipping", "address", "carrier", "estimated"],
-    "account":       ["account", "password", "login", "email", "profile"],
-    "escalation":    ["escalate", "supervisor", "manager", "not happy", "complaint"],
-    "greeting":      ["hello", "hi", "hey", "thanks", "thank you", "bye"],
+    "cancel_order": ["cancel", "cancellation", "cancel my order"],
+    "billing": ["charge", "invoice", "payment", "bill", "receipt"],
+    "product_info": ["product", "item", "spec", "warranty", "how does"],
+    "shipping": ["ship", "shipping", "address", "carrier", "estimated"],
+    "account": ["account", "password", "login", "email", "profile"],
+    "escalation": ["escalate", "supervisor", "manager", "not happy", "complaint"],
+    "greeting": ["hello", "hi", "hey", "thanks", "thank you", "bye"],
 }
 
 _FALLBACK_RESPONSE = (
@@ -90,7 +90,9 @@ def _make_classify_node():
         message = state.get("message", "")
         intent, confidence = _ml_intent(message)
         needs_retrieval = intent not in _GREETING_INTENTS
-        logger.debug(f"classify: intent={intent} conf={confidence:.2f} retrieve={needs_retrieval}")
+        logger.debug(
+            f"classify: intent={intent} conf={confidence:.2f} retrieve={needs_retrieval}"
+        )
         return {
             "intent": intent,
             "intent_confidence": confidence,
@@ -123,6 +125,7 @@ def _make_retrieve_node(db: AsyncSession):
                 retriever = pipeline._retriever
                 await retriever.build_bm25_from_db(db)
                 import app.api.v1.rag as _rag_module
+
                 _rag_module._bm25_built = True
 
             t0 = time.perf_counter()
@@ -153,8 +156,13 @@ def _make_retrieve_node(db: AsyncSession):
                 "retrieved_doc_ids": doc_ids,
                 "context_text": rag_result.context_text,
                 "sources": sources,
-                "tool_calls": state.get("tool_calls", []) + [
-                    {"tool": "search_knowledge", "query": message, "n_results": len(doc_ids)}
+                "tool_calls": state.get("tool_calls", [])
+                + [
+                    {
+                        "tool": "search_knowledge",
+                        "query": message,
+                        "n_results": len(doc_ids),
+                    }
                 ],
             }
         except Exception as exc:
@@ -180,7 +188,7 @@ def _make_handle_action_node(db: AsyncSession):
         # Map intent → approval action
         action_map = {
             "return_refund": "issue_refund",
-            "cancel_order":  "cancel_order",
+            "cancel_order": "cancel_order",
         }
         action = action_map.get(intent)
         if not action:
@@ -203,9 +211,8 @@ def _make_handle_action_node(db: AsyncSession):
             )
             return {
                 "approval_result": approval,
-                "tool_calls": state.get("tool_calls", []) + [
-                    {"tool": "request_approval", "action": action, **approval}
-                ],
+                "tool_calls": state.get("tool_calls", [])
+                + [{"tool": "request_approval", "action": action, **approval}],
             }
         except Exception as exc:
             logger.warning(f"request_approval tool failed: {exc}")
@@ -227,7 +234,9 @@ def _make_generate_node(llm: LLMClient):
             outcome = approval.get("outcome", "")
             reason = approval.get("reason", "")
             if outcome == "auto_approve":
-                approval_note = f"\n\n[System: Request automatically approved. {reason}]"
+                approval_note = (
+                    f"\n\n[System: Request automatically approved. {reason}]"
+                )
             elif outcome == "approval_required":
                 approval_note = (
                     f"\n\n[System: Request is pending human approval "
@@ -243,6 +252,7 @@ def _make_generate_node(llm: LLMClient):
         messages.append({"role": "user", "content": user_prompt})
 
         from app.core.config import get_settings
+
         model = get_settings().OLLAMA_MODEL
         t0 = time.perf_counter()
         try:
@@ -258,6 +268,7 @@ def _make_generate_node(llm: LLMClient):
         if context.strip():
             try:
                 from app.evaluation.groundedness import _context_coverage
+
                 groundedness = round(_context_coverage(reply, context), 4)
             except Exception:
                 pass
@@ -276,10 +287,10 @@ def _build_graph(db: AsyncSession, llm: LLMClient) -> Any:
 
     graph = StateGraph(AgentState)
 
-    graph.add_node("classify",      _make_classify_node())
-    graph.add_node("retrieve",      _make_retrieve_node(db))
+    graph.add_node("classify", _make_classify_node())
+    graph.add_node("retrieve", _make_retrieve_node(db))
     graph.add_node("handle_action", _make_handle_action_node(db))
-    graph.add_node("generate",      _make_generate_node(llm))
+    graph.add_node("generate", _make_generate_node(llm))
 
     graph.set_entry_point("classify")
 
@@ -288,9 +299,9 @@ def _build_graph(db: AsyncSession, llm: LLMClient) -> Any:
         lambda s: "retrieve" if s.get("needs_retrieval", True) else "generate",
         {"retrieve": "retrieve", "generate": "generate"},
     )
-    graph.add_edge("retrieve",      "handle_action")
+    graph.add_edge("retrieve", "handle_action")
     graph.add_edge("handle_action", "generate")
-    graph.add_edge("generate",      END)
+    graph.add_edge("generate", END)
 
     return graph.compile()
 
@@ -338,6 +349,7 @@ async def run_agent(
             final_state: AgentState = await app.ainvoke(initial_state)
         else:
             import asyncio
+
             final_state = await asyncio.get_event_loop().run_in_executor(
                 None, app.invoke, initial_state
             )

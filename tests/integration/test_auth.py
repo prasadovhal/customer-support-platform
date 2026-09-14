@@ -4,14 +4,13 @@ from __future__ import annotations
 import pytest
 from httpx import AsyncClient
 
-from tests.integration.conftest import _customer_token
 
 pytestmark = pytest.mark.asyncio
 
 
 class TestLogin:
     async def test_login_returns_tokens(self, async_client: AsyncClient, make_customer):
-        customer = await make_customer(email="alice@test.com", password="Secret99!")
+        await make_customer(email="alice@test.com", password="Secret99!")
 
         resp = await async_client.post(
             "/api/v1/auth/token",
@@ -58,7 +57,7 @@ class TestRefresh:
     async def test_refresh_returns_new_tokens(
         self, async_client: AsyncClient, make_customer
     ):
-        customer = await make_customer(email="charlie@test.com", password="Pass123!")
+        await make_customer(email="charlie@test.com", password="Pass123!")
 
         login = await async_client.post(
             "/api/v1/auth/token",

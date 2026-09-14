@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 import numpy as np
@@ -8,7 +8,7 @@ from loguru import logger
 from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.knowledge import EmbeddingMetadata, KnowledgeChunk, KnowledgeDocument
+from app.models.knowledge import KnowledgeChunk, KnowledgeDocument
 from app.rag.bm25_index import BM25Index, BM25Result
 from app.rag.embedder import EmbeddingService
 
@@ -163,7 +163,7 @@ class RAGRetriever:
                 KnowledgeDocument.path,
             )
             .join(KnowledgeDocument, KnowledgeChunk.doc_id == KnowledgeDocument.id)
-            .where(KnowledgeDocument.is_active == True)
+            .where(KnowledgeDocument.is_active.is_(True))
         )
         rows = (await db.execute(stmt)).fetchall()
         records = [

@@ -16,7 +16,8 @@ class LLMClient(Protocol):
         self,
         messages: list[dict[str, str]],
         system: Optional[str] = None,
-    ) -> str: ...
+    ) -> str:
+        ...
 
 
 class OllamaClient:

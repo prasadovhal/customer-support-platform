@@ -108,9 +108,7 @@ def register_exception_handlers(app: FastAPI) -> None:
         return _build_error_response(exc)
 
     @app.exception_handler(NotFoundError)
-    async def not_found_handler(
-        request: Request, exc: NotFoundError
-    ) -> JSONResponse:
+    async def not_found_handler(request: Request, exc: NotFoundError) -> JSONResponse:
         return _build_error_response(exc)
 
     @app.exception_handler(AuthenticationError)

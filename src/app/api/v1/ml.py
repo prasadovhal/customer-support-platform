@@ -2,16 +2,11 @@ from __future__ import annotations
 
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, Field
 
 from app.ml.predictor import (
-    AllPredictions,
     CategoryPrediction,
-    EscalationPrediction,
-    PriorityPrediction,
-    RoutingPrediction,
-    SentimentPrediction,
     TicketPredictor,
 )
 from app.ml.registry import ModelRegistry
@@ -32,6 +27,7 @@ def _get_predictor() -> TicketPredictor:
 
 
 # ---------- Request / Response schemas ----------
+
 
 class PredictRequest(BaseModel):
     message: str = Field(..., min_length=1, max_length=5000)
@@ -92,15 +88,20 @@ class ModelsResponse(BaseModel):
 
 # ---------- Helpers ----------
 
+
 def _to_category_response(p: CategoryPrediction) -> CategoryResponse:
     return CategoryResponse(
         label=p.label,
         confidence=p.confidence,
-        top3=[ClassProbability(label=t["label"], probability=t["probability"]) for t in p.top3],
+        top3=[
+            ClassProbability(label=t["label"], probability=t["probability"])
+            for t in p.top3
+        ],
     )
 
 
 # ---------- Endpoints ----------
+
 
 @router.post("/predict", response_model=PredictResponse)
 def predict(request: PredictRequest) -> PredictResponse:

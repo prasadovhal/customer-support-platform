@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
-from sqlalchemy import func, select, text
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
@@ -48,6 +48,7 @@ def _get_pipeline() -> RAGPipeline:
 
 
 # ---------- Request / Response schemas ----------
+
 
 class SearchRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=1000)
@@ -96,6 +97,7 @@ class IndexStats(BaseModel):
 
 
 # ---------- Endpoints ----------
+
 
 @router.post("/search", response_model=SearchResponse)
 async def search(
@@ -161,13 +163,19 @@ async def search(
 @router.get("/stats", response_model=IndexStats)
 async def index_stats(db: AsyncSession = Depends(get_db)) -> IndexStats:
     """Return knowledge base index statistics."""
-    total_docs = (await db.execute(select(func.count(KnowledgeDocument.id)))).scalar_one()
+    total_docs = (
+        await db.execute(select(func.count(KnowledgeDocument.id)))
+    ).scalar_one()
     active_docs = (
         await db.execute(
-            select(func.count(KnowledgeDocument.id)).where(KnowledgeDocument.is_active == True)
+            select(func.count(KnowledgeDocument.id)).where(
+                KnowledgeDocument.is_active.is_(True)
+            )
         )
     ).scalar_one()
-    total_chunks = (await db.execute(select(func.count(KnowledgeChunk.id)))).scalar_one()
+    total_chunks = (
+        await db.execute(select(func.count(KnowledgeChunk.id)))
+    ).scalar_one()
     embedded_chunks = (
         await db.execute(
             select(func.count(EmbeddingMetadata.id)).where(

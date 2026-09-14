@@ -25,9 +25,7 @@ class Conversation(Base, TimestampMixin):
         nullable=True,
         index=True,
     )
-    channel: Mapped[str] = mapped_column(
-        String, nullable=False
-    )  # api, web, mobile
+    channel: Mapped[str] = mapped_column(String, nullable=False)  # api, web, mobile
     status: Mapped[str] = mapped_column(
         String, nullable=False, server_default=text("'active'"), index=True
     )  # active, escalated, resolved, closed
@@ -139,9 +137,7 @@ class ConversationWorkflowState(Base):
     pending_verification_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True), nullable=True
     )
-    context_data: Mapped[Optional[dict[str, Any]]] = mapped_column(
-        JSONB, nullable=True
-    )
+    context_data: Mapped[Optional[dict[str, Any]]] = mapped_column(JSONB, nullable=True)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=text("now()"),

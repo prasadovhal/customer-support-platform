@@ -12,7 +12,7 @@ from app.db.session import get_db
 from app.models.conversation import Conversation
 from app.schemas.auth import TokenPayload
 from app.schemas.conversation import ConversationCreate, ConversationResponse
-from app.security.dependencies import get_current_agent, get_current_token, get_optional_customer
+from app.security.dependencies import get_current_token, get_optional_customer
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
 

@@ -23,6 +23,7 @@ def _generate_ticket_number() -> str:
     """Generate a TK-XXXXX style ticket number."""
     import random
     import string
+
     suffix = "".join(random.choices(string.ascii_uppercase + string.digits, k=5))
     return f"TK-{suffix}"
 
@@ -121,9 +122,7 @@ async def get_ticket(
 
     if token.type == "customer":
         if str(ticket.customer_id) != token.sub:
-            raise AuthorizationError(
-                message="You do not have access to this ticket."
-            )
+            raise AuthorizationError(message="You do not have access to this ticket.")
     elif token.type != "agent":
         raise AuthorizationError(message="Unsupported token type.")
 

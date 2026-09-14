@@ -86,5 +86,8 @@ ML_LATENCY = Histogram(
 APPROVAL_OUTCOMES = Counter(
     "approval_outcomes_total",
     "Approval requests by policy outcome",
-    labelnames=["action", "outcome"],  # outcome: auto_approve | approval_required | denied
+    labelnames=[
+        "action",
+        "outcome",
+    ],  # outcome: auto_approve | approval_required | denied
 )

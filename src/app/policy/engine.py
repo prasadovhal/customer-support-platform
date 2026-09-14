@@ -44,9 +44,9 @@ class PolicyDecision:
     """Result of a policy evaluation."""
 
     outcome: Outcome
-    policy_id: str          # logical rule that fired
+    policy_id: str  # logical rule that fired
     policy_version: str = POLICY_VERSION
-    reason: str = ""        # human-readable explanation
+    reason: str = ""  # human-readable explanation
     eligibility_basis: str = ""  # brief structured basis (for audit)
 
 
@@ -58,9 +58,9 @@ class PolicyEngine:
     def evaluate(self, ctx: PolicyContext) -> PolicyDecision:
         """Return a PolicyDecision for the given context."""
         handler = {
-            "issue_refund":   self._eval_refund,
-            "cancel_order":   self._eval_cancellation,
-            "email_change":   self._eval_account_change,
+            "issue_refund": self._eval_refund,
+            "cancel_order": self._eval_cancellation,
+            "email_change": self._eval_account_change,
             "address_change": self._eval_account_change,
         }.get(ctx.action)
 

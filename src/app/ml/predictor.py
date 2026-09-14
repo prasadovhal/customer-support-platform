@@ -70,6 +70,7 @@ class TicketPredictor:
 
     def _text(self, message: str, subject: str = "") -> str:
         import pandas as pd
+
         row = pd.Series({"message": message, "subject": subject})
         return extract_text(row)
 
@@ -118,7 +119,9 @@ class TicketPredictor:
             confidence=float(proba[idx]),
         )
 
-    def predict_escalation(self, message: str, subject: str = "") -> EscalationPrediction:
+    def predict_escalation(
+        self, message: str, subject: str = ""
+    ) -> EscalationPrediction:
         pipeline = self._model("escalation")
         text = self._text(message, subject)
         proba = pipeline.predict_proba([text])[0]

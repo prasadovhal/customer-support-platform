@@ -37,9 +37,7 @@ async def get_customer(customer_id: str, db: AsyncSession) -> Optional[dict[str,
 
 async def get_order(order_id: str, db: AsyncSession) -> Optional[dict[str, Any]]:
     """Fetch order details for a given UUID string."""
-    result = await db.execute(
-        select(Order).where(Order.id == uuid.UUID(order_id))
-    )
+    result = await db.execute(select(Order).where(Order.id == uuid.UUID(order_id)))
     order = result.scalar_one_or_none()
     if order is None:
         return None
@@ -83,7 +81,8 @@ async def request_approval(
             order_status = order.status
             if order.created_at:
                 order_age_days = (
-                    datetime.now(timezone.utc) - order.created_at.replace(tzinfo=timezone.utc)
+                    datetime.now(timezone.utc)
+                    - order.created_at.replace(tzinfo=timezone.utc)
                 ).days
 
     # Load customer segment
@@ -113,10 +112,13 @@ async def request_approval(
     # Create approval record
     from app.core.config import get_settings
     from datetime import timedelta
+
     sla_deadline = datetime.now(timezone.utc) + timedelta(
         hours=get_settings().APPROVAL_SLA_HOURS
     )
-    approval_status = "approved" if decision.outcome == "auto_approve" else "pending_approval"
+    approval_status = (
+        "approved" if decision.outcome == "auto_approve" else "pending_approval"
+    )
     now = datetime.now(timezone.utc)
 
     approval = ApprovalRequest(
@@ -140,15 +142,19 @@ async def request_approval(
     )
     db.add(approval)
 
-    db.add(ApprovalAuditLog(
-        id=uuid.uuid4(),
-        approval_id=approval.id,
-        event="requested" if decision.outcome == "approval_required" else "auto_approved",
-        actor_id="agent_ai",
-        actor_role="assistant",
-        reason=decision.reason,
-        policy_version=decision.policy_version,
-    ))
+    db.add(
+        ApprovalAuditLog(
+            id=uuid.uuid4(),
+            approval_id=approval.id,
+            event="requested"
+            if decision.outcome == "approval_required"
+            else "auto_approved",
+            actor_id="agent_ai",
+            actor_role="assistant",
+            reason=decision.reason,
+            policy_version=decision.policy_version,
+        )
+    )
 
     # Update workflow state if pending
     if decision.outcome == "approval_required":
@@ -162,12 +168,14 @@ async def request_approval(
             wf.state = "awaiting_approval"
             wf.pending_approval_id = approval.id
         else:
-            db.add(ConversationWorkflowState(
-                id=uuid.uuid4(),
-                conversation_id=uuid.UUID(conversation_id),
-                state="awaiting_approval",
-                pending_approval_id=approval.id,
-            ))
+            db.add(
+                ConversationWorkflowState(
+                    id=uuid.uuid4(),
+                    conversation_id=uuid.UUID(conversation_id),
+                    state="awaiting_approval",
+                    pending_approval_id=approval.id,
+                )
+            )
 
     await db.flush()
 

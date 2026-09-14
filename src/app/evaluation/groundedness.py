@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import re
 import string
 from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass
@@ -98,7 +96,9 @@ def aggregate_groundedness(results: list[GroundednessResult]) -> dict:
     return {
         "n_queries": n,
         "mean_context_coverage": round(sum(r.context_coverage for r in results) / n, 4),
-        "mean_answer_context_f1": round(sum(r.answer_context_f1 for r in results) / n, 4),
+        "mean_answer_context_f1": round(
+            sum(r.answer_context_f1 for r in results) / n, 4
+        ),
         "doc_id_hit_rate": round(sum(r.doc_id_hit for r in results) / n, 4),
         "grounded_rate": round(sum(r.grounded for r in results) / n, 4),
     }

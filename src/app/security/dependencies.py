@@ -34,9 +34,7 @@ def get_current_customer(
         AuthorizationError: If the token is not a customer token.
     """
     if payload.type != "customer":
-        raise AuthorizationError(
-            message="This endpoint requires a customer token."
-        )
+        raise AuthorizationError(message="This endpoint requires a customer token.")
     return payload
 
 
@@ -49,9 +47,7 @@ def get_current_agent(
         AuthorizationError: If the token is not an agent token.
     """
     if payload.type != "agent":
-        raise AuthorizationError(
-            message="This endpoint requires an agent token."
-        )
+        raise AuthorizationError(message="This endpoint requires an agent token.")
     return payload
 
 
@@ -67,9 +63,7 @@ def require_scope(scope: str) -> Callable[..., TokenPayload]:
 
     def _check(payload: TokenPayload = Depends(get_current_token)) -> TokenPayload:
         if scope not in payload.scopes:
-            raise AuthorizationError(
-                message=f"Missing required scope: '{scope}'."
-            )
+            raise AuthorizationError(message=f"Missing required scope: '{scope}'.")
         return payload
 
     return _check
@@ -88,7 +82,5 @@ def get_optional_customer(
         return None
     payload = decode_token(token)
     if payload.type != "customer":
-        raise AuthorizationError(
-            message="This endpoint requires a customer token."
-        )
+        raise AuthorizationError(message="This endpoint requires a customer token.")
     return payload

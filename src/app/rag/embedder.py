@@ -24,6 +24,7 @@ class EmbeddingService:
     def _load(self) -> None:
         if self._model is None:
             from sentence_transformers import SentenceTransformer
+
             logger.info(f"Loading embedding model: {self.model_name}")
             self._model = SentenceTransformer(self.model_name)
             logger.info(f"Embedding model loaded (dim={EMBEDDING_DIM})")

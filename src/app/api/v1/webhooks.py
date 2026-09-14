@@ -3,7 +3,6 @@ from __future__ import annotations
 import hashlib
 import hmac
 import uuid
-from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import APIRouter, Depends, Header, Request

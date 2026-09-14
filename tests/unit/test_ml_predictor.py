@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
@@ -21,7 +21,9 @@ def predictor() -> TicketPredictor:
     return TicketPredictor(registry=registry)
 
 
-def test_predict_category_returns_highest_prob_label(predictor: TicketPredictor) -> None:
+def test_predict_category_returns_highest_prob_label(
+    predictor: TicketPredictor,
+) -> None:
     pipeline = _make_mock_pipeline(
         ["account", "returns", "shipping"],
         [0.1, 0.7, 0.2],

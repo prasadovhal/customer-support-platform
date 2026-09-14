@@ -40,9 +40,7 @@ async def get_order(
         )
     elif token.type == "agent":
         result = await db.execute(
-            select(Order)
-            .options(selectinload(Order.items))
-            .where(Order.id == order_id)
+            select(Order).options(selectinload(Order.items)).where(Order.id == order_id)
         )
     else:
         raise AuthorizationError(message="Unsupported token type.")

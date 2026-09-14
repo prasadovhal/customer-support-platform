@@ -22,6 +22,7 @@ from typing import AsyncGenerator, Optional
 def _get_tracer():
     try:
         from opentelemetry import trace
+
         return trace.get_tracer("customer_support.observability")
     except Exception:
         return None
@@ -47,6 +48,7 @@ async def trace_agent(
             span.record_exception(exc)
             try:
                 from opentelemetry.trace import StatusCode
+
                 span.set_status(StatusCode.ERROR, str(exc))
             except Exception:
                 pass

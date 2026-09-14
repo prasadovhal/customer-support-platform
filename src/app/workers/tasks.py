@@ -57,7 +57,7 @@ def expire_stale_approvals(self) -> dict[str, Any]:
     import asyncio
     from datetime import datetime, timezone
 
-    from sqlalchemy import select, update
+    from sqlalchemy import select
 
     from app.db.base import get_engine
     from app.models.approval import ApprovalAuditLog, ApprovalRequest
@@ -100,10 +100,10 @@ def _dispatch_order_event(
 ) -> None:
     """Route an order event to the appropriate handler."""
     handlers = {
-        "order.shipped":    _on_order_shipped,
-        "order.delivered":  _on_order_delivered,
-        "order.cancelled":  _on_order_cancelled,
-        "order.refunded":   _on_order_refunded,
+        "order.shipped": _on_order_shipped,
+        "order.delivered": _on_order_delivered,
+        "order.cancelled": _on_order_cancelled,
+        "order.refunded": _on_order_refunded,
     }
     handler = handlers.get(event_type)
     if handler:
@@ -113,8 +113,9 @@ def _dispatch_order_event(
 
 
 def _on_order_shipped(order_id: str, payload: dict[str, Any]) -> None:
-    logger.info("Order shipped", order_id=order_id,
-                tracking=payload.get("tracking_number"))
+    logger.info(
+        "Order shipped", order_id=order_id, tracking=payload.get("tracking_number")
+    )
 
 
 def _on_order_delivered(order_id: str, payload: dict[str, Any]) -> None:
@@ -122,10 +123,12 @@ def _on_order_delivered(order_id: str, payload: dict[str, Any]) -> None:
 
 
 def _on_order_cancelled(order_id: str, payload: dict[str, Any]) -> None:
-    logger.info("Order cancelled", order_id=order_id,
-                reason=payload.get("cancellation_reason"))
+    logger.info(
+        "Order cancelled", order_id=order_id, reason=payload.get("cancellation_reason")
+    )
 
 
 def _on_order_refunded(order_id: str, payload: dict[str, Any]) -> None:
-    logger.info("Order refunded", order_id=order_id,
-                amount=payload.get("refund_amount"))
+    logger.info(
+        "Order refunded", order_id=order_id, amount=payload.get("refund_amount")
+    )

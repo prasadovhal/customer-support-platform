@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime
 
 from sqlalchemy import DateTime, func
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine

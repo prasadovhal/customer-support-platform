@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import math
 from dataclasses import asdict, dataclass, field
-from typing import Optional
 
 
 @dataclass
 class RetrievalMetrics:
     """Per-query and aggregate retrieval metrics."""
+
     recall_at_1: float = 0.0
     recall_at_3: float = 0.0
     recall_at_5: float = 0.0
@@ -62,7 +62,7 @@ def ndcg_at_k(retrieved: list[str], relevant: list[str], k: int) -> float:
 
 
 def compute_retrieval_metrics(
-    per_query_results: list[tuple[list[str], list[str]]]
+    per_query_results: list[tuple[list[str], list[str]]],
 ) -> RetrievalMetrics:
     """Aggregate metrics over a list of (retrieved_ids, relevant_ids) pairs."""
     n = len(per_query_results)
@@ -91,6 +91,7 @@ def compute_retrieval_metrics(
 
 # ── Regression Gate (EVAL-006) ──────────────────────────────────────────────
 
+
 @dataclass
 class GateViolation:
     metric: str
@@ -110,11 +111,13 @@ class EvaluationGate:
       - MRR     relative regression > 5% → block
     """
 
-    THRESHOLDS: dict[str, float] = field(default_factory=lambda: {
-        "recall_at_5": 0.05,
-        "ndcg_at_5": 0.05,
-        "mrr": 0.05,
-    })
+    THRESHOLDS: dict[str, float] = field(
+        default_factory=lambda: {
+            "recall_at_5": 0.05,
+            "ndcg_at_5": 0.05,
+            "mrr": 0.05,
+        }
+    )
 
     def check(
         self,

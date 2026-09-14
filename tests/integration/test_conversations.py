@@ -11,9 +11,7 @@ pytestmark = pytest.mark.asyncio
 
 class TestCreateConversation:
     async def test_create_anonymous_conversation(self, async_client: AsyncClient):
-        resp = await async_client.post(
-            "/api/v1/conversations", json={"channel": "api"}
-        )
+        resp = await async_client.post("/api/v1/conversations", json={"channel": "api"})
         assert resp.status_code == 201
         body = resp.json()
         assert body["channel"] == "api"
@@ -79,6 +77,7 @@ class TestGetConversation:
         self, async_client: AsyncClient, make_customer
     ):
         import uuid
+
         customer = await make_customer()
         token = _customer_token(str(customer.id))
 

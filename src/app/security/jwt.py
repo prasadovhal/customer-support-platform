@@ -52,7 +52,9 @@ def create_access_token(
         "iss": _ISSUER,
     }
 
-    return jwt.encode(payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
+    return jwt.encode(
+        payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
+    )
 
 
 def create_refresh_token(subject: str, token_type: str) -> str:
@@ -81,7 +83,9 @@ def create_refresh_token(subject: str, token_type: str) -> str:
         "iss": _ISSUER,
     }
 
-    return jwt.encode(payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
+    return jwt.encode(
+        payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
+    )
 
 
 def decode_token(token: str) -> TokenPayload:

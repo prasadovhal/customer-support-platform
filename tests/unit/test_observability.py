@@ -2,21 +2,14 @@
 from __future__ import annotations
 
 import pytest
-from prometheus_client import REGISTRY, CollectorRegistry
+from prometheus_client import REGISTRY
 
 
 # ── Metrics definitions ───────────────────────────────────────────────────────
 
+
 def test_all_metrics_registered():
     """All expected metric names must exist in the default Prometheus registry."""
-    from app.observability.metrics import (
-        AGENT_CALLS, AGENT_LATENCY,
-        APPROVAL_OUTCOMES,
-        HTTP_REQUEST_DURATION, HTTP_REQUESTS,
-        LLM_CALLS, LLM_LATENCY,
-        ML_INFERENCES, ML_LATENCY,
-        RAG_LATENCY, RAG_RETRIEVALS,
-    )
     # prometheus_client strips _total from Counter names internally; check base names
     expected_names = {
         "http_requests",
@@ -66,24 +59,40 @@ def test_llm_calls_counter_tracks_errors():
 def test_rag_retrievals_counter():
     from app.observability.metrics import RAG_RETRIEVALS
 
-    before = _read_counter(RAG_RETRIEVALS, strategy="bm25+dense+reranked", outcome="success")
+    before = _read_counter(
+        RAG_RETRIEVALS, strategy="bm25+dense+reranked", outcome="success"
+    )
     RAG_RETRIEVALS.labels(strategy="bm25+dense+reranked", outcome="success").inc()
-    after = _read_counter(RAG_RETRIEVALS, strategy="bm25+dense+reranked", outcome="success")
+    after = _read_counter(
+        RAG_RETRIEVALS, strategy="bm25+dense+reranked", outcome="success"
+    )
     assert after == before + 1.0
 
 
 def test_approval_outcomes_counter_per_action():
     from app.observability.metrics import APPROVAL_OUTCOMES
 
-    before_auto = _read_counter(APPROVAL_OUTCOMES, action="issue_refund", outcome="auto_approve")
-    before_pend = _read_counter(APPROVAL_OUTCOMES, action="issue_refund", outcome="approval_required")
+    before_auto = _read_counter(
+        APPROVAL_OUTCOMES, action="issue_refund", outcome="auto_approve"
+    )
+    before_pend = _read_counter(
+        APPROVAL_OUTCOMES, action="issue_refund", outcome="approval_required"
+    )
 
     APPROVAL_OUTCOMES.labels(action="issue_refund", outcome="auto_approve").inc()
     APPROVAL_OUTCOMES.labels(action="issue_refund", outcome="auto_approve").inc()
     APPROVAL_OUTCOMES.labels(action="issue_refund", outcome="approval_required").inc()
 
-    assert _read_counter(APPROVAL_OUTCOMES, action="issue_refund", outcome="auto_approve") == before_auto + 2.0
-    assert _read_counter(APPROVAL_OUTCOMES, action="issue_refund", outcome="approval_required") == before_pend + 1.0
+    assert (
+        _read_counter(APPROVAL_OUTCOMES, action="issue_refund", outcome="auto_approve")
+        == before_auto + 2.0
+    )
+    assert (
+        _read_counter(
+            APPROVAL_OUTCOMES, action="issue_refund", outcome="approval_required"
+        )
+        == before_pend + 1.0
+    )
 
 
 def test_ml_inferences_no_model_label():
@@ -91,10 +100,14 @@ def test_ml_inferences_no_model_label():
 
     before = _read_counter(ML_INFERENCES, task="category", outcome="no_model")
     ML_INFERENCES.labels(task="category", outcome="no_model").inc()
-    assert _read_counter(ML_INFERENCES, task="category", outcome="no_model") == before + 1.0
+    assert (
+        _read_counter(ML_INFERENCES, task="category", outcome="no_model")
+        == before + 1.0
+    )
 
 
 # ── Path normalisation ────────────────────────────────────────────────────────
+
 
 def test_normalise_path_replaces_uuid():
     from app.observability.middleware import _normalise_path
@@ -118,6 +131,7 @@ def test_normalise_path_multiple_uuids():
 
 
 # ── Tracing helpers (no-op when OTel not configured) ──────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_trace_agent_noop_without_otel():
@@ -161,6 +175,7 @@ async def test_trace_propagates_exceptions():
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
+
 
 def _read_counter(metric, **labels) -> float:
     """Read current value of a labelled counter from the registry."""

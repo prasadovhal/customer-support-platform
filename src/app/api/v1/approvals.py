@@ -8,7 +8,12 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
-from app.core.exceptions import AuthorizationError, ConflictError, NotFoundError, ValidationError
+from app.core.exceptions import (
+    AuthorizationError,
+    ConflictError,
+    NotFoundError,
+    ValidationError,
+)
 from app.observability.metrics import APPROVAL_OUTCOMES
 from app.db.session import get_db
 from app.models.approval import ApprovalAuditLog, ApprovalRequest
@@ -25,9 +30,9 @@ router = APIRouter(prefix="/approvals", tags=["approvals"])
 _policy_engine = PolicyEngine()
 
 _ACTION_SCOPE_MAP: dict[str, str] = {
-    "issue_refund":   "approve:refunds",
-    "cancel_order":   "approve:cancellations",
-    "email_change":   "approve:account_changes",
+    "issue_refund": "approve:refunds",
+    "cancel_order": "approve:cancellations",
+    "email_change": "approve:account_changes",
     "address_change": "approve:account_changes",
 }
 
@@ -46,6 +51,7 @@ def _sla_deadline() -> datetime:
 
 # ── Create ────────────────────────────────────────────────────────────────────
 
+
 @router.post("", response_model=ApprovalResponse, status_code=201)
 async def create_approval(
     body: ApprovalCreate,
@@ -63,10 +69,14 @@ async def create_approval(
     """
     # 1. Idempotency — check if already submitted
     existing = await db.execute(
-        select(ApprovalRequest).where(ApprovalRequest.idempotency_key == body.idempotency_key)
+        select(ApprovalRequest).where(
+            ApprovalRequest.idempotency_key == body.idempotency_key
+        )
     )
     if existing.scalar_one_or_none() is not None:
-        raise ConflictError(message="An approval with this idempotency_key already exists.")
+        raise ConflictError(
+            message="An approval with this idempotency_key already exists."
+        )
 
     # 2. Load conversation and check access
     conv_result = await db.execute(
@@ -78,7 +88,9 @@ async def create_approval(
 
     if token.type == "customer":
         if conv.customer_id is None or str(conv.customer_id) != token.sub:
-            raise AuthorizationError(message="You do not have access to this conversation.")
+            raise AuthorizationError(
+                message="You do not have access to this conversation."
+            )
     elif token.type != "agent":
         raise AuthorizationError(message="Unsupported token type.")
 
@@ -96,15 +108,16 @@ async def create_approval(
     order_status: str | None = None
     order_age_days: int | None = None
     if body.order_id:
-        order_result = await db.execute(
-            select(Order).where(Order.id == body.order_id)
-        )
+        order_result = await db.execute(select(Order).where(Order.id == body.order_id))
         order = order_result.scalar_one_or_none()
         if order is None:
             raise NotFoundError(message=f"Order {body.order_id} not found.")
         order_status = order.status
         if order.created_at:
-            order_age_days = (datetime.now(timezone.utc) - order.created_at.replace(tzinfo=timezone.utc)).days
+            order_age_days = (
+                datetime.now(timezone.utc)
+                - order.created_at.replace(tzinfo=timezone.utc)
+            ).days
 
     # 5. Run policy engine
     ctx = PolicyContext(
@@ -122,13 +135,16 @@ async def create_approval(
     if decision.outcome == "denied":
         raise ValidationError(
             message=f"Action denied by policy: {decision.reason}",
-            detail={"policy_id": decision.policy_id, "policy_version": decision.policy_version},
+            detail={
+                "policy_id": decision.policy_id,
+                "policy_version": decision.policy_version,
+            },
         )
 
     # 6. Map outcome to approval status
     status_map = {
-        "auto_approve":       "approved",
-        "approval_required":  "pending_approval",
+        "auto_approve": "approved",
+        "approval_required": "pending_approval",
     }
     approval_status = status_map[decision.outcome]
     now = datetime.now(timezone.utc)
@@ -159,7 +175,9 @@ async def create_approval(
     audit_log = ApprovalAuditLog(
         id=uuid.uuid4(),
         approval_id=approval.id,
-        event="requested" if decision.outcome == "approval_required" else "auto_approved",
+        event="requested"
+        if decision.outcome == "approval_required"
+        else "auto_approved",
         actor_id=token.sub,
         actor_role=token.type,
         reason=decision.reason,
@@ -179,12 +197,14 @@ async def create_approval(
             wf.state = "awaiting_approval"
             wf.pending_approval_id = approval.id
         else:
-            db.add(ConversationWorkflowState(
-                id=uuid.uuid4(),
-                conversation_id=body.conversation_id,
-                state="awaiting_approval",
-                pending_approval_id=approval.id,
-            ))
+            db.add(
+                ConversationWorkflowState(
+                    id=uuid.uuid4(),
+                    conversation_id=body.conversation_id,
+                    state="awaiting_approval",
+                    pending_approval_id=approval.id,
+                )
+            )
 
     await db.flush()
     await db.refresh(approval)
@@ -207,6 +227,7 @@ async def create_approval(
 
 
 # ── Read ──────────────────────────────────────────────────────────────────────
+
 
 @router.get("/{approval_id}", response_model=ApprovalResponse)
 async def get_approval(
@@ -243,6 +264,7 @@ async def get_approval(
 
 
 # ── Decide ────────────────────────────────────────────────────────────────────
+
 
 @router.post("/{approval_id}/decision", response_model=ApprovalResponse)
 async def decide_approval(

@@ -66,9 +66,7 @@ class ApprovalRequest(Base, TimestampMixin):
     sla_deadline: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, index=True
     )
-    decided_by: Mapped[Optional[str]] = mapped_column(
-        String, nullable=True
-    )  # agent_id
+    decided_by: Mapped[Optional[str]] = mapped_column(String, nullable=True)  # agent_id
     decided_at: Mapped[Optional[datetime]] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
@@ -76,9 +74,7 @@ class ApprovalRequest(Base, TimestampMixin):
     executed_at: Mapped[Optional[datetime]] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
-    idempotency_key: Mapped[str] = mapped_column(
-        String, unique=True, nullable=False
-    )
+    idempotency_key: Mapped[str] = mapped_column(String, unique=True, nullable=False)
 
     # Relationships
     customer: Mapped["Customer"] = relationship(  # noqa: F821

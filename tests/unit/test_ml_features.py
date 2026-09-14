@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pandas as pd
-import pytest
 
 from app.ml.features import extract_text, extract_texts, texts_from_messages
 
@@ -31,10 +30,12 @@ def test_extract_text_handles_missing_subject() -> None:
 
 
 def test_extract_texts_returns_list() -> None:
-    df = pd.DataFrame([
-        {"subject": "Refund", "message": "I need a refund."},
-        {"subject": None, "message": "Order tracking?"},
-    ])
+    df = pd.DataFrame(
+        [
+            {"subject": "Refund", "message": "I need a refund."},
+            {"subject": None, "message": "Order tracking?"},
+        ]
+    )
     texts = extract_texts(df)
     assert len(texts) == 2
     assert "refund" in texts[0]

@@ -5,10 +5,10 @@ from decimal import Decimal
 
 # Refund auto-approval thresholds by customer segment
 REFUND_AUTO_THRESHOLD: dict[str, Decimal] = {
-    "standard":   Decimal("50.00"),
-    "premium":    Decimal("100.00"),
+    "standard": Decimal("50.00"),
+    "premium": Decimal("100.00"),
     "enterprise": Decimal("200.00"),
-    "default":    Decimal("50.00"),
+    "default": Decimal("50.00"),
 }
 
 # Number of days after delivery within which returns are eligible

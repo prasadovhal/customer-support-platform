@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from app.evaluation.metrics import (
     RetrievalMetrics,
@@ -80,13 +80,17 @@ class RetrievalEvalReport:
         print(f"  nDCG@5   : {m.ndcg_at_5:.4f}")
         print(f"  nDCG@10  : {m.ndcg_at_10:.4f}")
         if self.by_difficulty:
-            print(f"\n  By difficulty:")
+            print("\n  By difficulty:")
             for diff, dm in sorted(self.by_difficulty.items()):
-                print(f"    {diff:<10} R@5={dm.recall_at_5:.3f}  MRR={dm.mrr:.3f}  nDCG@5={dm.ndcg_at_5:.3f}  (n={dm.n_queries})")
+                print(
+                    f"    {diff:<10} R@5={dm.recall_at_5:.3f}  MRR={dm.mrr:.3f}  nDCG@5={dm.ndcg_at_5:.3f}  (n={dm.n_queries})"
+                )
         if self.by_query_type:
-            print(f"\n  By query type:")
+            print("\n  By query type:")
             for qtype, qm in sorted(self.by_query_type.items()):
-                print(f"    {qtype:<15} R@5={qm.recall_at_5:.3f}  MRR={qm.mrr:.3f}  (n={qm.n_queries})")
+                print(
+                    f"    {qtype:<15} R@5={qm.recall_at_5:.3f}  MRR={qm.mrr:.3f}  (n={qm.n_queries})"
+                )
         print("=" * 65)
 
 
@@ -114,9 +118,7 @@ def _build_offline_bm25(kb_dir: Path) -> tuple[BM25Index, list[Chunk]]:
     return bm25, all_chunks
 
 
-def _retrieve_bm25(
-    bm25: BM25Index, query: str, top_k: int = 10
-) -> list[str]:
+def _retrieve_bm25(bm25: BM25Index, query: str, top_k: int = 10) -> list[str]:
     """Return document IDs (KB-XXX-YYY) for the top-k BM25 results."""
     results = bm25.search(query, top_k=top_k)
     seen: list[str] = []
@@ -155,7 +157,9 @@ def evaluate_bm25_offline(
 
     for rec in eval_records:
         query = rec.get("question") or rec.get("query", "")
-        relevant = rec.get("expected_document_ids") or rec.get("relevant_document_ids", [])
+        relevant = rec.get("expected_document_ids") or rec.get(
+            "relevant_document_ids", []
+        )
         eval_id = rec.get("qa_id") or rec.get("eval_id", "")
         difficulty = rec.get("difficulty", "unknown")
         query_type = rec.get("query_type") or rec.get("intent", "unknown")

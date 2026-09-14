@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import uuid
 
-import pytest
 import pytest_asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,6 +13,7 @@ from app.security.password import hash_password
 
 
 # ── Customer factory ──────────────────────────────────────────────────────────
+
 
 @pytest_asyncio.fixture()
 async def make_customer(db_session: AsyncSession):
@@ -45,6 +45,7 @@ async def make_customer(db_session: AsyncSession):
 
 # ── Token helpers ─────────────────────────────────────────────────────────────
 
+
 def _customer_token(customer_id: str) -> str:
     return create_access_token(
         subject=customer_id,
@@ -61,7 +62,8 @@ def _agent_token(
     return create_access_token(
         subject=agent_id or str(uuid.uuid4()),
         token_type="agent",
-        scopes=scopes or [
+        scopes=scopes
+        or [
             "approve:refunds",
             "approve:cancellations",
             "approve:account_changes",
@@ -71,6 +73,7 @@ def _agent_token(
 
 
 # ── Conversation factory ──────────────────────────────────────────────────────
+
 
 @pytest_asyncio.fixture()
 async def make_conversation(db_session: AsyncSession):

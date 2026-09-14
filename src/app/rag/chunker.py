@@ -8,8 +8,8 @@ from typing import Any
 # PyYAML is available as a transitive dependency (via langchain)
 import yaml
 
-CHUNK_SIZE = 1500       # characters (~400 tokens at 3.75 chars/token)
-CHUNK_OVERLAP = 200     # characters
+CHUNK_SIZE = 1500  # characters (~400 tokens at 3.75 chars/token)
+CHUNK_OVERLAP = 200  # characters
 CHUNK_VERSION = "1.0.0"
 
 # Separators in priority order — split on paragraph breaks first, then lines, then words
@@ -42,7 +42,7 @@ def parse_article(path: Path) -> ParsedDocument:
             metadata = yaml.safe_load(match.group(1)) or {}
         except yaml.YAMLError:
             metadata = {}
-        body = raw[match.end():]
+        body = raw[match.end() :]
     else:
         metadata = {}
         body = raw
@@ -54,7 +54,9 @@ def _estimate_tokens(text: str) -> int:
     return max(1, len(text) // 4)
 
 
-def _split_recursive(text: str, separators: list[str], chunk_size: int, chunk_overlap: int) -> list[str]:
+def _split_recursive(
+    text: str, separators: list[str], chunk_size: int, chunk_overlap: int
+) -> list[str]:
     """Recursively split text using the separator list, smallest unit last."""
     if not text:
         return []
@@ -80,7 +82,9 @@ def _split_recursive(text: str, separators: list[str], chunk_size: int, chunk_ov
                         remaining_seps = separators[separators.index(sep) + 1 :]
                         if remaining_seps:
                             chunks.extend(
-                                _split_recursive(part, remaining_seps, chunk_size, chunk_overlap)
+                                _split_recursive(
+                                    part, remaining_seps, chunk_size, chunk_overlap
+                                )
                             )
                         else:
                             chunks.append(part[:chunk_size])
@@ -117,5 +121,6 @@ def load_all_articles(kb_dir: Path) -> list[ParsedDocument]:
             docs.append(parse_article(path))
         except Exception as exc:
             import warnings
+
             warnings.warn(f"Failed to parse {path}: {exc}")
     return docs
