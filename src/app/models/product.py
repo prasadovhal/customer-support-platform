@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import uuid
 from decimal import Decimal
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
+
+if TYPE_CHECKING:
+    from app.models.order import OrderItem
 
 from sqlalchemy import Boolean, Numeric, String, Integer, text
 from sqlalchemy.dialects.postgresql import JSONB, UUID

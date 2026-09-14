@@ -70,13 +70,12 @@ def _ml_intent(message: str) -> tuple[str, float]:
 
         predictor = TicketPredictor()
         result = predictor.predict_category(
+            message=message,
             subject=message[:200],
-            body=message,
-            customer_segment="standard",
         )
         ML_INFERENCES.labels(task="category", outcome="success").inc()
         ML_LATENCY.labels(task="category").observe(time.perf_counter() - t0)
-        return result.category, float(result.confidence)
+        return result.label, float(result.confidence)
     except Exception:
         ML_INFERENCES.labels(task="category", outcome="no_model").inc()
         return _keyword_intent(message)

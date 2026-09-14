@@ -16,7 +16,7 @@ _SKIP_METRIC_PATHS = frozenset({"/metrics", "/health", "/ready"})
 
 # Collapse path parameters so label cardinality stays bounded:
 # /api/v1/conversations/550e.../messages  →  /api/v1/conversations/{id}/messages
-_PARAM_SEGMENTS = frozenset(
+_PARAM_SEGMENTS: frozenset[str] = frozenset(
     {
         # UUID-shaped (8-4-4-4-12 hex groups or 32 hex chars)
     }

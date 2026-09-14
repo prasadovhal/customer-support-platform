@@ -62,7 +62,7 @@ class ModelRegistry:
             entries,
             key=lambda e: e.get("val_metrics", {}).get("macro_f1", 0.0),
         )
-        return best["model_path"]
+        return best["model_path"]  # type: ignore[no-any-return]
 
     def list_versions(self, task: str) -> list[dict[str, Any]]:
         return list(self._data.get(task, []))

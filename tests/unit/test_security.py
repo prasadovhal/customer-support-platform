@@ -89,10 +89,12 @@ class TestJWT:
             scopes=[],
             expire_minutes=15,
         )
-        # Flip one character in the signature segment.
+        # Flip a character in the middle of the signature segment.
+        # (Avoid the last char: base64 padding may make its low bits non-significant.)
         parts = token.split(".")
         signature = parts[2]
-        tampered_sig = signature[:-1] + ("A" if signature[-1] != "A" else "B")
+        mid = len(signature) // 2
+        tampered_sig = signature[:mid] + ("A" if signature[mid] != "A" else "B") + signature[mid + 1 :]
         tampered_token = ".".join([parts[0], parts[1], tampered_sig])
         with pytest.raises(AuthenticationError):
             decode_token(tampered_token)

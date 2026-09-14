@@ -35,6 +35,7 @@ class CrossEncoderReranker:
         if not candidates:
             return []
         self._load()
+        assert self._model is not None
         pairs = [[query, c.text] for c in candidates]
         scores = self._model.predict(pairs, show_progress_bar=False)
         for candidate, score in zip(candidates, scores):

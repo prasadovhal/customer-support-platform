@@ -32,6 +32,7 @@ class EmbeddingService:
     def embed_chunks(self, texts: list[str], batch_size: int = 64) -> np.ndarray:
         """Encode document chunks — no query prefix."""
         self._load()
+        assert self._model is not None
         return self._model.encode(
             texts,
             batch_size=batch_size,
@@ -42,6 +43,7 @@ class EmbeddingService:
     def embed_query(self, query: str) -> np.ndarray:
         """Encode a single query with the BGE instruction prefix."""
         self._load()
+        assert self._model is not None
         return self._model.encode(
             QUERY_PREFIX + query,
             normalize_embeddings=True,

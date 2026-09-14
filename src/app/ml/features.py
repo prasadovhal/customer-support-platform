@@ -45,7 +45,7 @@ def extract_texts(df: pd.DataFrame) -> list[str]:
     """Vectorised text extraction for a DataFrame."""
     subjects = df.get("subject", pd.Series([""] * len(df), index=df.index)).fillna("")
     messages = df.get("message", pd.Series([""] * len(df), index=df.index)).fillna("")
-    return (subjects + " " + messages).str.strip().str.lower().tolist()
+    return (subjects + " " + messages).str.strip().str.lower().tolist()  # type: ignore[no-any-return]
 
 
 def texts_from_messages(messages: list[str]) -> list[str]:

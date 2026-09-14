@@ -14,7 +14,7 @@ from app.ml.registry import ModelRegistry
 class CategoryPrediction:
     label: str
     confidence: float
-    top3: list[dict[str, float]]
+    top3: list[dict[str, Any]]
 
 
 @dataclass

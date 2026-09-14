@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
+
+if TYPE_CHECKING:
+    from app.models.approval import ApprovalRequest, VerificationRequest
+    from app.models.customer import Customer
+    from app.models.ticket import SupportTicket
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, text
 from sqlalchemy.dialects.postgresql import JSONB, UUID

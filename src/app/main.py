@@ -34,7 +34,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     await engine.dispose()
 
 
-def _configure_otel(settings) -> None:  # type: ignore[no-untyped-def]
+def _configure_otel(settings) -> None:
     """Configure OpenTelemetry instrumentation if enabled."""
     try:
         from opentelemetry import trace
@@ -88,7 +88,7 @@ def create_app() -> FastAPI:
 
     # X-Request-ID middleware
     @app.middleware("http")
-    async def add_request_id(request: Request, call_next):  # type: ignore[no-untyped-def]
+    async def add_request_id(request: Request, call_next):  # noqa: ANN001
         request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
         response = await call_next(request)
         response.headers["X-Request-ID"] = request_id

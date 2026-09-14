@@ -1,7 +1,13 @@
 from __future__ import annotations
 
 import uuid
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from app.models.approval import ApprovalRequest, VerificationRequest
+    from app.models.conversation import Conversation
+    from app.models.order import Order
+    from app.models.ticket import SupportTicket
 
 from sqlalchemy import String, text
 from sqlalchemy.dialects.postgresql import UUID

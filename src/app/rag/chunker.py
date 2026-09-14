@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 # PyYAML is available as a transitive dependency (via langchain)
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 CHUNK_SIZE = 1500  # characters (~400 tokens at 3.75 chars/token)
 CHUNK_OVERLAP = 200  # characters
