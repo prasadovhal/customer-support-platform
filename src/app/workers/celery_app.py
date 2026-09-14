@@ -21,7 +21,12 @@ celery_app.conf.update(
     task_reject_on_worker_lost=True,
     worker_prefetch_multiplier=1,
     task_track_started=True,
-    # Timezone
     enable_utc=True,
     timezone="UTC",
+    beat_schedule={
+        "expire-stale-approvals": {
+            "task": "app.workers.tasks.expire_stale_approvals",
+            "schedule": 900.0,  # every 15 minutes
+        },
+    },
 )

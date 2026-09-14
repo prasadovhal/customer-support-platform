@@ -1,8 +1,27 @@
 version: "3.9"
 
+# ── Shared app base (DRY) ──────────────────────────────────────────────────────
+x-app-base: &app-base
+  build:
+    context: .
+    dockerfile: Dockerfile
+  env_file: .env
+  environment:
+    PYTHONPATH: /app/src
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+  restart: unless-stopped
+  volumes:
+    - ./src:/app/src          # hot-reload in development
+    - ./alembic:/app/alembic  # migration files visible inside container
+
+# ── Infrastructure ─────────────────────────────────────────────────────────────
 services:
   db:
-    image: postgres:15-alpine
+    image: pgvector/pgvector:pg15
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -17,7 +36,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 15s
 
   redis:
     image: redis:7-alpine
@@ -33,6 +52,8 @@ services:
       retries: 5
       start_period: 5s
 
+  # ── Optional: LLM serving ─────────────────────────────────────────────────
+  # docker compose --profile llm up
   ollama:
     image: ollama/ollama:latest
     ports:
@@ -42,43 +63,55 @@ services:
     profiles:
       - llm
 
+  # ── Optional: distributed tracing ─────────────────────────────────────────
+  # docker compose --profile observability up
   jaeger:
     image: jaegertracing/all-in-one:latest
     ports:
-      - "16686:16686"
-      - "14268:14268"
+      - "16686:16686"   # Jaeger UI
+      - "14268:14268"   # HTTP trace collector
     profiles:
       - observability
 
+# ── Application ────────────────────────────────────────────────────────────────
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    env_file:
-      - .env
+    <<: *app-base
     ports:
       - "8000:8000"
-    volumes:
-      - ./src:/app/src
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: >
+      uvicorn app.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-dir /app/src
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
   worker:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    <<: *app-base
+    command: >
+      celery -A app.workers.celery_app worker
+      --loglevel=info
+      --queues=critical,approvals,notifications,ingestion,evaluation,analytics,celery
+      --concurrency=2
+
+  beat:
+    <<: *app-base
+    command: >
+      celery -A app.workers.celery_app beat
+      --loglevel=info
+      --scheduler celery.beat.PersistentScheduler
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-    env_file:
-      - .env
-    command: celery -A app.workers.celery_app worker -l info -Q critical,approvals,notifications,ingestion,evaluation,analytics
+      worker:
+        condition: service_started
 
 volumes:
   postgres_data:
