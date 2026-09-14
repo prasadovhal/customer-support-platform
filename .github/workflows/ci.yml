@@ -26,20 +26,23 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Cache pip
+      - name: Install Poetry
+        run: pip install poetry==${{ env.POETRY_VERSION }}
+
+      - name: Cache Poetry virtualenv
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
-          key: pip-lint-${{ hashFiles('pyproject.toml') }}
+          path: ~/.cache/pypoetry/virtualenvs
+          key: poetry-${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ hashFiles('poetry.lock') }}
 
-      - name: Install ruff
-        run: pip install ruff
+      - name: Install dependencies
+        run: poetry install --with dev
 
       - name: Lint (ruff check)
-        run: ruff check src/ tests/
+        run: poetry run ruff check src/ tests/
 
       - name: Format (ruff format --check)
-        run: ruff format --check src/ tests/
+        run: poetry run ruff format --check src/ tests/
 
   # ── Type-check ──────────────────────────────────────────────────────────────
   typecheck:

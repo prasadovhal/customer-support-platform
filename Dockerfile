@@ -3,7 +3,7 @@ FROM python:3.11-slim AS builder
 
 WORKDIR /build
 
-RUN pip install --no-cache-dir poetry
+RUN pip install --no-cache-dir "poetry==1.7.1"
 
 COPY pyproject.toml poetry.lock* ./
 
