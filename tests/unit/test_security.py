@@ -94,7 +94,11 @@ class TestJWT:
         parts = token.split(".")
         signature = parts[2]
         mid = len(signature) // 2
-        tampered_sig = signature[:mid] + ("A" if signature[mid] != "A" else "B") + signature[mid + 1 :]
+        tampered_sig = (
+            signature[:mid]
+            + ("A" if signature[mid] != "A" else "B")
+            + signature[mid + 1 :]
+        )
         tampered_token = ".".join([parts[0], parts[1], tampered_sig])
         with pytest.raises(AuthenticationError):
             decode_token(tampered_token)
