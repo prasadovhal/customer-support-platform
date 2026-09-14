@@ -4,14 +4,16 @@ import uuid
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 
 from app.api.v1.router import v1_router
 from app.core.config import get_settings
 from app.core.exceptions import register_exception_handlers
 from app.core.logging import setup_logging
+from app.observability.middleware import MetricsMiddleware
 
 
 @asynccontextmanager
@@ -82,6 +84,9 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    # Metrics + structured access logging (outermost so it times everything)
+    app.add_middleware(MetricsMiddleware)
+
     # X-Request-ID middleware
     @app.middleware("http")
     async def add_request_id(request: Request, call_next):  # type: ignore[no-untyped-def]
@@ -89,6 +94,14 @@ def create_app() -> FastAPI:
         response = await call_next(request)
         response.headers["X-Request-ID"] = request_id
         return response
+
+    # Prometheus scrape endpoint — no auth, path outside /api/v1
+    @app.get("/metrics", include_in_schema=False)
+    async def metrics() -> Response:
+        return Response(
+            content=generate_latest(),
+            media_type=CONTENT_TYPE_LATEST,
+        )
 
     # Exception handlers
     register_exception_handlers(app)

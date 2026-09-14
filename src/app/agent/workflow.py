@@ -16,6 +16,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.agent.llm import LLMClient, OllamaClient
 from app.agent.prompts import SYSTEM_PROMPT, build_user_prompt
 from app.agent.schemas import AgentResult, AgentState
+from app.observability.metrics import (
+    AGENT_CALLS,
+    AGENT_LATENCY,
+    LLM_CALLS,
+    LLM_LATENCY,
+    ML_INFERENCES,
+    ML_LATENCY,
+    RAG_LATENCY,
+    RAG_RETRIEVALS,
+)
 
 # Intent labels that don't require knowledge retrieval
 _GREETING_INTENTS = frozenset({"greeting", "thanks", "goodbye"})
@@ -54,6 +64,7 @@ def _keyword_intent(message: str) -> tuple[str, float]:
 
 
 def _ml_intent(message: str) -> tuple[str, float]:
+    t0 = time.perf_counter()
     try:
         from app.ml.predictor import TicketPredictor
 
@@ -63,8 +74,11 @@ def _ml_intent(message: str) -> tuple[str, float]:
             body=message,
             customer_segment="standard",
         )
+        ML_INFERENCES.labels(task="category", outcome="success").inc()
+        ML_LATENCY.labels(task="category").observe(time.perf_counter() - t0)
         return result.category, float(result.confidence)
     except Exception:
+        ML_INFERENCES.labels(task="category", outcome="no_model").inc()
         return _keyword_intent(message)
 
 
@@ -111,6 +125,7 @@ def _make_retrieve_node(db: AsyncSession):
                 import app.api.v1.rag as _rag_module
                 _rag_module._bm25_built = True
 
+            t0 = time.perf_counter()
             rag_result = await pipeline.query(
                 db=db,
                 query=message,
@@ -118,6 +133,10 @@ def _make_retrieve_node(db: AsyncSession):
                 use_bm25=True,
                 use_reranker=True,
             )
+            strategy = rag_result.retrieval_strategy
+            RAG_RETRIEVALS.labels(strategy=strategy, outcome="success").inc()
+            RAG_LATENCY.labels(strategy=strategy).observe(time.perf_counter() - t0)
+
             doc_ids = [c.doc_id for c in rag_result.chunks if c.doc_id]
             sources = [
                 {
@@ -129,7 +148,7 @@ def _make_retrieve_node(db: AsyncSession):
                 }
                 for s in rag_result.sources
             ]
-            logger.debug(f"retrieve: {len(doc_ids)} docs, strategy={rag_result.retrieval_strategy}")
+            logger.debug(f"retrieve: {len(doc_ids)} docs, strategy={strategy}")
             return {
                 "retrieved_doc_ids": doc_ids,
                 "context_text": rag_result.context_text,
@@ -139,6 +158,7 @@ def _make_retrieve_node(db: AsyncSession):
                 ],
             }
         except Exception as exc:
+            RAG_RETRIEVALS.labels(strategy="hybrid", outcome="error").inc()
             logger.warning(f"RAG retrieval failed (proceeding without context): {exc}")
             return {"retrieved_doc_ids": [], "context_text": "", "sources": []}
 
@@ -222,9 +242,15 @@ def _make_generate_node(llm: LLMClient):
         user_prompt = build_user_prompt(message, full_context)
         messages.append({"role": "user", "content": user_prompt})
 
+        from app.core.config import get_settings
+        model = get_settings().OLLAMA_MODEL
+        t0 = time.perf_counter()
         try:
             reply = await llm.chat(messages=messages, system=SYSTEM_PROMPT)
+            LLM_CALLS.labels(model=model, outcome="success").inc()
+            LLM_LATENCY.labels(model=model).observe(time.perf_counter() - t0)
         except Exception as exc:
+            LLM_CALLS.labels(model=model, outcome="error").inc()
             logger.warning(f"LLM generation failed: {exc}")
             reply = _FALLBACK_RESPONSE
 
@@ -317,12 +343,18 @@ async def run_agent(
             )
     except Exception as exc:
         logger.error(f"Agent workflow failed: {exc}")
+        AGENT_CALLS.labels(intent="unknown", outcome="fallback").inc()
+        AGENT_LATENCY.observe(time.perf_counter() - t0)
         return AgentResult(
             response=_FALLBACK_RESPONSE,
             latency_ms=int((time.perf_counter() - t0) * 1000),
         )
 
     latency_ms = int((time.perf_counter() - t0) * 1000)
+    intent = final_state.get("intent") or "unknown"
+    outcome = "fallback" if not final_state.get("response") else "success"
+    AGENT_CALLS.labels(intent=intent, outcome=outcome).inc()
+    AGENT_LATENCY.observe(time.perf_counter() - t0)
 
     return AgentResult(
         response=final_state.get("response") or _FALLBACK_RESPONSE,

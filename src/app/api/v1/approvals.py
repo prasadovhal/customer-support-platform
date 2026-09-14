@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.exceptions import AuthorizationError, ConflictError, NotFoundError, ValidationError
+from app.observability.metrics import APPROVAL_OUTCOMES
 from app.db.session import get_db
 from app.models.approval import ApprovalAuditLog, ApprovalRequest
 from app.models.conversation import Conversation, ConversationWorkflowState
@@ -115,6 +116,8 @@ async def create_approval(
         order_age_days=order_age_days,
     )
     decision = _policy_engine.evaluate(ctx)
+
+    APPROVAL_OUTCOMES.labels(action=body.action, outcome=decision.outcome).inc()
 
     if decision.outcome == "denied":
         raise ValidationError(
