@@ -32,6 +32,18 @@ from app.main import app  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
+# Session-scoped event loop — required so session-scoped async fixtures
+# (create_tables) share the same loop as per-test fixtures.
+# ---------------------------------------------------------------------------
+@pytest.fixture(scope="session")
+def event_loop():
+    import asyncio
+    loop = asyncio.new_event_loop()
+    yield loop
+    loop.close()
+
+
+# ---------------------------------------------------------------------------
 # Settings fixture
 # ---------------------------------------------------------------------------
 @pytest.fixture(scope="session")
@@ -57,9 +69,16 @@ def test_engine(settings):
 
 @pytest_asyncio.fixture(scope="session")
 async def create_tables(test_engine):
-    """Create all tables at the start of the test session and drop them after."""
-    async with test_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    """Create all tables at the start of the test session and drop them after.
+
+    Skips gracefully if the database is not reachable (e.g. Docker not running).
+    """
+    import pytest
+    try:
+        async with test_engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+    except Exception as exc:
+        pytest.skip(f"Database not reachable — skipping integration tests: {exc}")
     yield
     async with test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

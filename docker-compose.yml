@@ -1,5 +1,3 @@
-version: "3.9"
-
 # ── Shared app base (DRY) ──────────────────────────────────────────────────────
 x-app-base: &app-base
   build:
