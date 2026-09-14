@@ -6,6 +6,12 @@ import httpx
 from loguru import logger
 
 from app.core.config import get_settings
+from app.core.resilience import RetryConfig, with_retry
+
+_llm_retry = with_retry(
+    RetryConfig(max_attempts=3, wait_min_seconds=1.0, wait_max_seconds=8.0),
+    exceptions=(httpx.HTTPError, httpx.TimeoutException),
+)
 
 
 @runtime_checkable
@@ -30,6 +36,7 @@ class OllamaClient:
     def __init__(self) -> None:
         self._cfg = get_settings()
 
+    @_llm_retry
     async def chat(
         self,
         messages: list[dict[str, str]],
