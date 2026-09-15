@@ -738,7 +738,257 @@ Per-category intent accuracy:
 
 ---
 
-## 7. Observability
+### 6.7 LLM-as-a-Judge Evaluation
+
+LLM-as-a-Judge uses a stronger LLM (judge model) to evaluate the outputs of the system automatically, without requiring hand-labelled data for every question. The judge reads the question, the system's response, and the retrieved context, then scores quality along defined dimensions. This section defines all metrics relevant to this system, their formulas, and how they map to the two evaluation tiers: **heuristic** (no LLM required, fast, runs in CI) and **LLM-judge** (requires LLM call, richer signal, used for release evaluation).
+
+---
+
+#### 6.7.1 Evaluation Tiers
+
+| Tier | Method | Speed | Cost | When to run |
+|---|---|---|---|---|
+| **Heuristic** | Token overlap, Jaccard similarity, cosine sim | ~1ms per query | Free | Every CI run, regression gate |
+| **LLM-Judge** | LLM scores response against rubric (1–5 or 0–1) | ~1–3s per query | LLM tokens | Pre-release, A/B evaluation |
+
+All heuristic formulas are implemented in `src/app/evaluation/`. LLM-judge prompts are defined in this section and can be run using the `EvaluationPlatform`.
+
+---
+
+#### 6.7.2 RAG Evaluation Metrics — Three Tiers
+
+**Tier 1: Retrieval Quality** (measures what was retrieved, not what the LLM said)
+
+| Metric | Formula | Current Value | What it catches |
+|---|---|---|---|
+| **Context Precision** | Average Precision: `(1/R) × Σ_k [rel(k) × cumrel(k)/k]` | — | Retrieved documents that are irrelevant (noise in context) |
+| **Context Recall** | `|GT_tokens ∩ Context_tokens| / |GT_tokens|` | — | Missing relevant documents (incomplete context) |
+| **Context Relevance** | `Σ_chunk Jaccard(query, chunk) / n_chunks` | — | Context chunks that don't match the query |
+| **Hit Rate** | `1 if any relevant doc retrieved else 0` | — | Whether retrieval succeeded at all |
+| **MRR** | `1 / rank_of_first_relevant` | **0.388** | How early the first useful result appears |
+| **Recall@5** | `|retrieved[:5] ∩ relevant| / |relevant|` | **0.503** | Whether top-5 contain the answer |
+| **nDCG@5** | `DCG@5 / IDCG@5` with log₂ discount | **0.389** | Ranking quality — relevant docs higher = better |
+
+> *MRR, Recall@5, and nDCG@5 are the three regression-gated metrics. Current numbers are from BM25-only offline evaluation (n=62 queries). Full hybrid pipeline numbers are expected to be ~15–20% higher.*
+
+**Tier 2: Generation Quality** (measures what the LLM said given the context)
+
+| Metric | Formula | Threshold | Type |
+|---|---|---|---|
+| **Faithfulness** | `supported_claims / total_claims`; a claim is supported if `token_overlap(claim, context) ≥ 0.5` | ≥ 0.80 | Heuristic |
+| **Answer Relevance** | `0.7 × Jaccard_unigrams(query, answer) + 0.3 × Jaccard_bigrams(query, answer)` | ≥ 0.40 | Heuristic |
+| **Groundedness** | `0.5 × entity_coverage + 0.5 × token_coverage` (answer tokens found in context) | ≥ 0.70 | Heuristic (implemented) |
+| **Hallucination Detection** | `flagged_claims / total_claims`; flagged if context_overlap < 0.4 AND GT_overlap < 0.4 | ≤ 0.10 | Heuristic |
+| **Citation Correctness** | `correct_citations / total_citations`; correct if `overlap(claim, cited_chunk) ≥ 0.4` | ≥ 0.80 | Heuristic |
+| **LLM-Judge: Faithfulness** | Judge scores 1–5: "Is every claim in the response supported by the provided context?" | ≥ 4.0 / 5 | LLM-Judge |
+| **LLM-Judge: Answer Relevance** | Judge scores 1–5: "Does the response directly answer the customer's question?" | ≥ 4.0 / 5 | LLM-Judge |
+
+**Distinction: Faithfulness vs Hallucination vs Groundedness**
+
+These three terms are related but measure different failure modes:
+- **Groundedness** — `≥ 70%` of the answer's content words appear in the context. Fails when the answer is too generic or uses words not in the retrieved articles.
+- **Faithfulness** — every factual *claim* in the answer is traceable to a specific sentence in the context. Fails when the model combines facts correctly but adds an unsupported inference.
+- **Hallucination** — a claim appears in the answer that is absent from BOTH the context AND the expected ground-truth answer. The strictest failure — the model invented something.
+
+**Tier 3: End-to-End Quality** (measures full question → answer pipeline)
+
+| Metric | Formula | Type |
+|---|---|---|
+| **Answer Correctness** | `0.5 × F1(answer, GT) + 0.3 × Jaccard(answer, GT) + 0.2 × entity_overlap(answer, GT)` | Heuristic |
+| **Context Utilization** | `mean(chunk_utilization)`; `chunk_util = |chunk_tokens ∩ answer_tokens| / |chunk_tokens|`; "used" if ≥ 0.15 | Heuristic |
+| **LLM-Judge: Correctness** | `0.4 × word_overlap + 0.3 × cosine_sim + 0.3 × fact_coverage` vs. reference answer | Heuristic composite |
+| **LLM-Judge: Helpfulness** | Judge scores: `0.25×length_score + 0.30×explanation + 0.20×structure + 0.25×specificity` | LLM-Judge |
+
+---
+
+#### 6.7.3 LLM-as-a-Judge — Judging Modes
+
+Four judging modes are applicable to this support agent system:
+
+**Mode 1: Pointwise Scoring (1–5)**
+
+Each response is scored independently against a rubric. The judge model receives the question, the expected answer (ground truth), and the actual response.
+
+```
+System: You are an expert evaluator of customer support AI responses.
+
+User:
+Question: {customer_question}
+Reference answer: {expected_answer}
+Context provided to agent: {retrieved_context}
+Agent response: {agent_response}
+
+Score the agent response on a scale of 1-5:
+  1 = Completely wrong or unhelpful. Does not address the question.
+  2 = Mostly wrong. Addresses the topic but gives incorrect or harmful information.
+  3 = Partially correct. Answers part of the question but misses key details.
+  4 = Mostly correct. Addresses the question well with minor gaps or imprecision.
+  5 = Fully correct. Accurate, complete, and directly helpful to the customer.
+
+IMPORTANT: Write your reasoning BEFORE the score.
+Format:
+Reasoning: [your analysis]
+Score: [1-5]
+```
+
+> Reasoning before score reduces anchoring bias. Judge temperature: 0.0–0.1.
+
+**Mode 2: G-Eval (Chain-of-Thought, 8 steps)**
+
+G-Eval improves human agreement correlation from ~0.57 (direct scoring) to ~0.75 by making the judge reason step-by-step before scoring:
+
+```
+Step 1: Understand the customer's question and what they need.
+Step 2: Identify the key facts that a correct answer must include.
+Step 3: Analyse the agent's response — what did it say?
+Step 4: Check factual accuracy — are all stated facts correct?
+Step 5: Check completeness — did it cover all the key facts from Step 2?
+Step 6: Check clarity — is the response easy for a customer to understand?
+Step 7: Check for hallucination — did it add any facts not in the context?
+Step 8: Assign a score 1–5 based on steps 1–7.
+```
+
+**Mode 3: Rubric-Based Scoring (multi-criterion, total 10 points)**
+
+| Criterion | Max Points | Description |
+|---|---|---|
+| Factual Accuracy | 3 | Every stated fact is correct and verifiable from context |
+| Completeness | 3 | All necessary information for the customer's situation is included |
+| Explanation Quality | 2 | Clear reasoning is given, not just a yes/no answer |
+| Technical Precision | 2 | Specific details (amounts, timelines, policy terms) are exact |
+| **Total** | **10** | Normalised to [0, 1] by dividing by 10 |
+
+**Mode 4: Pairwise Comparison (A/B testing responses)**
+
+Used to compare two versions of the system (e.g. before/after retrieval improvement, or two different LLM models):
+
+```
+System: You are an expert evaluator. Compare two customer support responses.
+Pick the better one — no ties allowed.
+
+Question: {customer_question}
+Response A: {response_a}
+Response B: {response_b}
+
+Format:
+Reasoning: [your comparison]
+Winner: [A or B]
+```
+
+> Mitigate **position bias** by running each pair twice with A and B swapped, then averaging. If both runs agree → clear winner. If they disagree → tie (re-run with 3rd judge call as tiebreaker).
+
+---
+
+#### 6.7.4 Response Quality Dimensions
+
+These 7 dimensions are evaluated for every agent response. Heuristic implementations exist for all; LLM-judge implementations give richer signal.
+
+| Dimension | Heuristic Formula | LLM-Judge Prompt (abbreviated) | Target |
+|---|---|---|---|
+| **Correctness** | `0.4×word_overlap + 0.3×cosine_sim + 0.3×fact_coverage` | "Is every factual claim in the response correct?" | ≥ 0.75 |
+| **Relevance** | `0.5×question_coverage + 0.3×cosine_sim + 0.2×bidirectional_overlap` | "Does the response directly address what the customer asked?" | ≥ 0.70 |
+| **Faithfulness** | `supported_claims / total_claims` (overlap ≥ 0.5) | "Is every claim in the response supported by the context?" | ≥ 0.80 |
+| **Completeness** | `0.6×aspect_coverage + 0.4×length_score` | "Does the response cover all aspects of the question?" | ≥ 0.70 |
+| **Helpfulness** | `0.25×length + 0.30×explanation + 0.20×structure + 0.25×specificity` | "Would this response actually help the customer solve their problem?" | ≥ 0.75 |
+| **Coherence** | `0.35×adj_sentence_sim + 0.25×connector_score + 0.15×first_last_sim + 0.25×topic_shift_score` | "Does the response flow logically from start to finish?" | ≥ 0.80 |
+| **Safety** | `max(0, 1 - n_flags × 0.2)` across dangerous-instruction categories | "Does the response contain any harmful, offensive, or misleading content?" | 1.00 |
+
+**Composite Response Quality Score:**
+
+```
+quality = 0.25 × correctness
+        + 0.20 × faithfulness
+        + 0.20 × relevance
+        + 0.15 × helpfulness
+        + 0.10 × completeness
+        + 0.05 × coherence
+        + 0.05 × safety
+```
+
+> Weights reflect the support domain priority: factual correctness and faithfulness to policy documents matter most; safety is binary (any safety failure is a hard block, not a weighted penalty).
+
+---
+
+#### 6.7.5 Agent-Specific Evaluation Metrics
+
+Beyond response quality, the *agent's behaviour* (tool selection, routing decisions, workflow) is evaluated independently:
+
+**Task Completion**
+
+| Outcome | Score |
+|---|---|
+| Task completed AND customer goal achieved | 1.00 |
+| Task completed BUT customer goal not achieved | 0.50 |
+| Task not completed BUT customer goal achieved (e.g. side-effect) | 0.75 |
+| Task not completed AND goal not achieved | 0.00 |
+
+> Partial scoring prevents binary pass/fail from masking partial successes. Applicable to refund/cancel use cases where "task completed" = approval created and "goal achieved" = customer notified.
+
+**Tool Use Efficiency**
+
+| Metric | Formula | Target |
+|---|---|---|
+| Tool efficiency | `(total_calls - error_calls) / total_calls` | ≥ 0.95 |
+| Argument quality | `fraction of tool calls with non-empty, valid arguments` | ≥ 0.90 |
+| Unnecessary calls | calls that returned no useful information or were repeated | ≤ 0.05 |
+
+**Trajectory Evaluation**
+
+| Metric | Formula | Target |
+|---|---|---|
+| Routing efficiency | `optimal_nodes_traversed / actual_nodes_traversed` | 1.00 (no wasted nodes) |
+| Greeting skip rate | `correctly_skipped_retrievals / total_greeting_messages` | ≥ 0.90 |
+| Policy compliance | `policy_engine_decisions_correct / total_actionable_intents` | 1.00 (deterministic) |
+
+> Policy compliance is always 1.00 for this system because the `PolicyEngine` is deterministic pure Python — it cannot produce incorrect outcomes given correct inputs. The evaluation checks that the **agent called the correct tool** with the **correct action** rather than checking the policy engine itself.
+
+**Reflection Score** (for future agentic loops)
+
+When the agent can review and revise its own response:
+
+| Outcome | Score |
+|---|---|
+| Agent self-corrected AND final goal achieved | 1.00 |
+| Agent reflected AND goal achieved without correction | 0.70 |
+| Agent reflected but reflection was insufficient | 0.40 |
+| No reflection attempted | 0.10 |
+
+---
+
+#### 6.7.6 Judge Reliability Metrics
+
+To trust LLM-as-a-Judge scores, the judge itself must be validated:
+
+| Metric | Formula | Acceptable Threshold |
+|---|---|---|
+| **Cohen's Kappa** | `(p_o − p_e) / (1 − p_e)` where `p_o` = observed agreement, `p_e` = expected agreement | > 0.60 (substantial); > 0.80 = almost perfect |
+| **Percent Agreement** | `exact_matches / total_items` (when compared to human labels) | > 0.70 |
+| **MAE vs. Human** | `mean(|judge_score − human_score|)` | < 0.5 on 1–5 scale |
+| **Human Agreement** | Industry benchmark: GPT-4 judge ~80% agreement with humans | < 70% = judge needs improvement |
+| **Verbosity Bias Check** | Pearson correlation between response length and judge score | `|r| < 0.30` |
+| **Position Bias Check** | Win rate in pairwise changes when A/B position is swapped | < 5% position effect |
+
+> For this system, the judge model should be `claude-opus-4-7` or `gpt-4o` (stronger than the evaluated `llama3.2`). Using the same model as both responder and judge introduces self-favoritism bias.
+
+---
+
+#### 6.7.7 Evaluation Summary — Current vs. Target
+
+| Metric | Current Value | Current Method | Target | Upgrade Path |
+|---|---|---|---|---|
+| Recall@5 | 0.503 | Heuristic (BM25 offline) | ≥ 0.65 | Full hybrid + LLM-judge context recall |
+| MRR | 0.388 | Heuristic | ≥ 0.50 | Improve chunking strategy |
+| nDCG@5 | 0.389 | Heuristic | ≥ 0.50 | Add metadata filtering |
+| Groundedness | 0.033 (BM25-only) | Heuristic (token overlap) | ≥ 0.70 | Full pipeline + LLM-judge faithfulness |
+| Intent Accuracy | 0.600 | Heuristic (label match) | ≥ 0.85 | Re-train on free-text queries, add greeting class |
+| Routing Accuracy | 0.667 | Heuristic | ≥ 0.95 | Confidence threshold → keyword fallback |
+| Response Correctness | — | Not yet measured | ≥ 0.75 | Implement LLM-judge pointwise scoring |
+| Faithfulness | — | Not yet measured | ≥ 0.80 | Implement claim-level overlap check |
+| Answer Relevance | — | Not yet measured | ≥ 0.70 | Implement query-answer Jaccard |
+| Hallucination Rate | — | Not yet measured | ≤ 0.10 | Implement dual-source claim check |
+| Task Completion | 100% (mocked) | Unit tests | ≥ 0.90 (real) | Live end-to-end eval with real LLM |
+
+---
 
 Three complementary layers are in use:
 
