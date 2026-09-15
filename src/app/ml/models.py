@@ -89,7 +89,6 @@ def build_pipeline(model_type: ModelType, use_class_weight: bool = False) -> Pip
             class_weight=weight,
             C=1.0,
             solver="lbfgs",
-            multi_class="auto",
             random_state=42,
         )
     elif model_type == "random_forest":

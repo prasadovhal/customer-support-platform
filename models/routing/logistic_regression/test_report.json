@@ -1,0 +1,126 @@
+{
+  "task_name": "routing",
+  "model_type": "logistic_regression",
+  "dataset": "test",
+  "n_samples": 200,
+  "accuracy": 0.97,
+  "macro_f1": 0.8448322212491047,
+  "weighted_f1": 0.955464833355386,
+  "per_class": [
+    {
+      "label": "billing_support",
+      "precision": 0.926829268292683,
+      "recall": 1.0,
+      "f1": 0.9620253164556962,
+      "support": 38
+    },
+    {
+      "label": "enterprise_support",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 6
+    },
+    {
+      "label": "general_support",
+      "precision": 0.9534883720930233,
+      "recall": 1.0,
+      "f1": 0.9761904761904762,
+      "support": 41
+    },
+    {
+      "label": "returns_support",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 38
+    },
+    {
+      "label": "security_support",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 18
+    },
+    {
+      "label": "shipping_support",
+      "precision": 0.9523809523809523,
+      "recall": 1.0,
+      "f1": 0.975609756097561,
+      "support": 20
+    },
+    {
+      "label": "technical_support",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 39
+    }
+  ],
+  "confusion_matrix": [
+    [
+      38,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      0,
+      2,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      41,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      38,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      18,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      20,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      39
+    ]
+  ],
+  "special_metrics": {}
+}

@@ -235,13 +235,15 @@ async def test_run_agent_greeting_skips_retrieval():
 
     mock_db = AsyncMock()
 
-    result = await run_agent(
-        message="Hello there",
-        conversation_id=str(uuid.uuid4()),
-        customer_id=None,
-        db=mock_db,
-        llm=MockLLM(),
-    )
+    # Pin intent so the test is not sensitive to which ML model is loaded on disk.
+    with patch("app.agent.workflow._ml_intent", return_value=("greeting", 0.95)):
+        result = await run_agent(
+            message="Hello there",
+            conversation_id=str(uuid.uuid4()),
+            customer_id=None,
+            db=mock_db,
+            llm=MockLLM(),
+        )
 
     assert result.response == generated_reply
     assert result.intent == "greeting"

@@ -1,0 +1,165 @@
+{
+  "category": [
+    {
+      "task": "category",
+      "model_type": "logistic_regression",
+      "model_path": "models\\category\\logistic_regression\\model.joblib",
+      "registered_at": "2026-09-14T16:50:33.652269+00:00",
+      "feature_version": "1.0.0",
+      "training_size": 600,
+      "val_size": 200,
+      "test_size": 200,
+      "trained_at": "2026-09-14T16:50:33.649289+00:00",
+      "label_column": "category",
+      "class_names": [
+        "account",
+        "orders",
+        "payments",
+        "products",
+        "refunds",
+        "returns",
+        "security",
+        "shipping",
+        "technical",
+        "warranty"
+      ],
+      "val_metrics": {
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "weighted_f1": 1.0
+      },
+      "test_metrics": {
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "weighted_f1": 1.0
+      }
+    }
+  ],
+  "priority": [
+    {
+      "task": "priority",
+      "model_type": "logistic_regression",
+      "model_path": "models\\priority\\logistic_regression\\model.joblib",
+      "registered_at": "2026-09-14T16:50:33.768982+00:00",
+      "feature_version": "1.0.0",
+      "training_size": 600,
+      "val_size": 200,
+      "test_size": 200,
+      "trained_at": "2026-09-14T16:50:33.766334+00:00",
+      "label_column": "priority",
+      "class_names": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "val_metrics": {
+        "accuracy": 0.265,
+        "macro_f1": 0.2216160533233704,
+        "weighted_f1": 0.29607923783533535,
+        "P0_recall": 0.16666666666666666,
+        "P1_recall": 0.34782608695652173
+      },
+      "test_metrics": {
+        "accuracy": 0.3,
+        "macro_f1": 0.2450203757246141,
+        "weighted_f1": 0.3255259317884452,
+        "P0_recall": 0.3333333333333333,
+        "P1_recall": 0.34782608695652173
+      }
+    }
+  ],
+  "sentiment": [
+    {
+      "task": "sentiment",
+      "model_type": "logistic_regression",
+      "model_path": "models\\sentiment\\logistic_regression\\model.joblib",
+      "registered_at": "2026-09-14T16:50:33.889542+00:00",
+      "feature_version": "1.0.0",
+      "training_size": 600,
+      "val_size": 200,
+      "test_size": 200,
+      "trained_at": "2026-09-14T16:50:33.886128+00:00",
+      "label_column": "sentiment",
+      "class_names": [
+        "angry",
+        "negative",
+        "neutral",
+        "positive"
+      ],
+      "val_metrics": {
+        "accuracy": 0.245,
+        "macro_f1": 0.2311543925599911,
+        "weighted_f1": 0.26276097140897614
+      },
+      "test_metrics": {
+        "accuracy": 0.255,
+        "macro_f1": 0.2399541994567016,
+        "weighted_f1": 0.2659210640296926
+      }
+    }
+  ],
+  "escalation": [
+    {
+      "task": "escalation",
+      "model_type": "logistic_regression",
+      "model_path": "models\\escalation\\logistic_regression\\model.joblib",
+      "registered_at": "2026-09-14T16:50:33.979482+00:00",
+      "feature_version": "1.0.0",
+      "training_size": 600,
+      "val_size": 200,
+      "test_size": 200,
+      "trained_at": "2026-09-14T16:50:33.977384+00:00",
+      "label_column": "escalated",
+      "class_names": [
+        "false",
+        "true"
+      ],
+      "val_metrics": {
+        "accuracy": 0.56,
+        "macro_f1": 0.43524579643178024,
+        "weighted_f1": 0.6210499294057246,
+        "escalation_recall": 0.3
+      },
+      "test_metrics": {
+        "accuracy": 0.575,
+        "macro_f1": 0.4295110574180342,
+        "weighted_f1": 0.634059867780798,
+        "escalation_recall": 0.2413793103448276
+      }
+    }
+  ],
+  "routing": [
+    {
+      "task": "routing",
+      "model_type": "logistic_regression",
+      "model_path": "models\\routing\\logistic_regression\\model.joblib",
+      "registered_at": "2026-09-14T16:50:34.342298+00:00",
+      "feature_version": "1.0.0",
+      "training_size": 600,
+      "val_size": 200,
+      "test_size": 200,
+      "trained_at": "2026-09-14T16:50:34.339005+00:00",
+      "label_column": "assigned_team",
+      "class_names": [
+        "account_support",
+        "billing_support",
+        "orders_support",
+        "returns_support",
+        "security_support",
+        "shipping_support",
+        "technical_support"
+      ],
+      "val_metrics": {
+        "accuracy": 0.975,
+        "macro_f1": 0.8467648488777246,
+        "weighted_f1": 0.9628022546795235
+      },
+      "test_metrics": {
+        "accuracy": 0.97,
+        "macro_f1": 0.8448322212491047,
+        "weighted_f1": 0.955464833355386
+      }
+    }
+  ]
+}
