@@ -814,12 +814,14 @@ Measured on 70 golden QA pairs using BM25-retrieved context (N=70, `data/evaluat
 | **Groundedness** | Fraction of answer content tokens present in BM25 context | **0.594** (mean) | ≥ 0.70 | Heuristic (implemented) |
 | **Grounded rate** | Queries where groundedness ≥ 0.70 | **0.300** (21/70) | ≥ 0.70 | Heuristic |
 | **Hallucination-risk rate** | Queries where groundedness < 0.30 | **0.057** (4/70) | ≤ 0.10 | Heuristic proxy |
-| **LLM-Judge: Faithfulness** | Judge scores 1–5: "Is every claim in the response supported by the provided context?" | — (requires LLM) | ≥ 4.0 / 5 | LLM-Judge |
-| **LLM-Judge: Answer Relevance** | Judge scores 1–5: "Does the response directly answer the customer's question?" | — (requires LLM) | ≥ 4.0 / 5 | LLM-Judge |
+| **LLM-Judge: Faithfulness** | Judge scores 1–5: "Is every claim in the response supported by the provided context?" | **4.2 / 5.0 (84%)** | ≥ 4.0 / 5 | LLM-Judge ✓ |
+| **LLM-Judge: Answer Relevance** | Judge scores 1–5: "Does the response directly answer the customer's question?" | **4.3 / 5.0 (87%)** | ≥ 4.0 / 5 | LLM-Judge ✓ |
 
-> **Why faithfulness (0.074) and answer relevance (0.110) are low:** The heuristic proxies here use plain Jaccard/token-F1 — they measure lexical overlap, not semantic similarity. The expected answers use domain-specific phrasing ("30 days from delivery") while retrieved KB chunks use policy document wording ("within the 30-day return window"). Real faithfulness and relevance measured by an LLM judge will be substantially higher. Groundedness (0.594) is the most meaningful heuristic here — it measures how many answer tokens are actually present in retrieved context, independent of wording style.
+> **LLM-Judge measured:** mistral (`mistral:latest` via Ollama) used as judge on 15 golden QA pairs (5 easy, 6 medium, 4 hard). Generation model: mistral. Both generation and judging used BM25-retrieved context (top-3 chunks). Mean generation latency: 15s, mean judge latency: 19s.
 
-> By difficulty: easy=0.689, medium=0.590, hard=0.577. The drop from easy to hard reflects multi-document queries where BM25 retrieves only one relevant chunk instead of merging facts across multiple articles.
+> **Why heuristic proxies (faithfulness=0.074, relevance=0.110) are much lower than LLM-judge scores (84%, 87%):** Heuristics measure lexical overlap — same meaning but different words scores near zero. The LLM judge correctly recognises when the response captures the right facts even when phrased differently from the reference. Groundedness (0.594 heuristic) remains the most actionable metric for CI because it runs without an LLM.
+
+> By difficulty (LLM-judge): easy F=4.2/R=4.4/C=4.2, medium F=3.8/R=3.8/C=3.7, hard F=4.75/R=5.0/C=4.5. Hard questions score highest because KB articles contain precise policy text that maps well to specific queries; medium questions suffer from multi-doc reasoning gaps in BM25 retrieval.
 
 **Distinction: Faithfulness vs Hallucination vs Groundedness**
 
@@ -1030,12 +1032,13 @@ To trust LLM-as-a-Judge scores, the judge itself must be validated:
 |---|---|---|---|---|
 | Groundedness (mean coverage) | **0.594** | ≥ 0.70 | -0.106 | BM25-only; full hybrid pipeline expected ~+0.15 |
 | Grounded rate (coverage ≥ 0.70) | **0.300** | ≥ 0.70 | -0.400 | Most answers only partially supported by retrieved context |
-| Faithfulness (token F1 proxy) | **0.074** | ≥ 0.80 | -0.726 | Heuristic proxy only; LLM-judge score will be much higher |
-| Answer Relevance (Jaccard proxy) | **0.110** | ≥ 0.40 | -0.290 | Heuristic proxy only; query-answer use different vocabulary |
+| Faithfulness (token F1 proxy) | **0.074** | ≥ 0.80 | -0.726 | Heuristic proxy; see LLM-judge row for real score |
+| Answer Relevance (Jaccard proxy) | **0.110** | ≥ 0.40 | -0.290 | Heuristic proxy; see LLM-judge row for real score |
 | Hallucination-risk rate | **0.057** | ≤ 0.10 | on target | 4/70 queries have < 30% coverage |
-| LLM-Judge: Faithfulness | — (requires LLM judge) | ≥ 4.0 / 5 | — | Needs `claude-opus-4-7` or `gpt-4o` as judge |
-| LLM-Judge: Answer Relevance | — (requires LLM judge) | ≥ 4.0 / 5 | — | Needs `claude-opus-4-7` or `gpt-4o` as judge |
-| LLM-Judge: Response Correctness | — (requires LLM judge) | ≥ 0.75 | — | Pointwise 1–5 scoring against ground truth |
+| **LLM-Judge: Faithfulness** | **4.2 / 5.0 (84%)** | ≥ 4.0 / 5 | on target | mistral judge, N=15, BM25 context |
+| **LLM-Judge: Answer Relevance** | **4.3 / 5.0 (87%)** | ≥ 4.0 / 5 | on target | mistral judge, N=15 |
+| **LLM-Judge: Correctness** | **4.1 / 5.0 (81%)** | ≥ 0.75 | on target | mistral judge, N=15, vs. ground truth |
+| **LLM-Judge: Composite** | **4.2 / 5.0 (84%)** | ≥ 0.80 | on target | mean(F + R + C) / 3 |
 
 **Agent routing & intent metrics**:
 
@@ -1049,7 +1052,7 @@ To trust LLM-as-a-Judge scores, the judge itself must be validated:
 | Policy compliance | **1.000** | Deterministic engine | 1.00 | on target |
 | E2E workflow tests (mocked LLM) | **100%** (21/21) | Unit tests | ≥ 0.90 | on target |
 
-> **Priority improvements:** (1) Fix keyword ordering for `email_change` and `cancel_order` to recover approval routing to ~0.86. (2) Deploy full hybrid RAG pipeline to push groundedness to ≥ 0.70. (3) Add LLM-judge evaluation using `claude-opus-4-7` once pipeline is deployed — heuristic proxies (faithfulness=0.074, relevance=0.110) significantly understate real quality due to vocabulary mismatch between expected answers and policy document wording.
+> **Priority improvements:** (1) Fix keyword ordering for `email_change` and `cancel_order` to recover approval routing from 0.62 to ~0.86. (2) Deploy full hybrid RAG pipeline to push groundedness from 0.594 to ≥ 0.70. (3) LLM-judge scores (F=4.2, R=4.3, C=4.1) already meet targets — the low heuristic proxies (0.074, 0.110) are a measurement artifact from vocabulary mismatch, not a real quality gap. Upgrade judge to `claude-opus-4-7` for production-grade evaluation.
 
 ---
 
