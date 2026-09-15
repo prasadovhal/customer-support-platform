@@ -740,6 +740,16 @@ Per-category intent accuracy:
 
 ## 7. Observability
 
+Three complementary layers are in use:
+
+| Layer | Tool | What it covers |
+|---|---|---|
+| **Metrics** | Prometheus + `/metrics` endpoint | Aggregate counts and latency histograms for all hot paths |
+| **LLM Tracing** | LangFuse (cloud, `us.cloud.langfuse.com`) | Per-request traces: intent classification, RAG retrieval, LLM prompt/response |
+| **Distributed Tracing** | OpenTelemetry → Jaeger (`--profile observability`) | Infra-level spans across FastAPI, SQLAlchemy, Redis, Celery, httpx |
+
+### 7.1 Prometheus Metrics
+
 All runtime events emit Prometheus metrics scraped at `/metrics`.
 
 | Metric | Type | Labels | Buckets (s) |
@@ -756,7 +766,52 @@ All runtime events emit Prometheus metrics scraped at `/metrics`.
 | `ml_latency_seconds` | Histogram | task | 0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25 |
 | `approval_outcomes_total` | Counter | action, outcome | — |
 
-Distributed tracing via OpenTelemetry (FastAPI, SQLAlchemy, Redis, Celery, httpx instrumentation) exported to Jaeger (`--profile observability`).
+### 7.2 LangFuse LLM Tracing
+
+Every agent invocation creates a **LangFuse trace** (`session_id = conversation_id`). Each trace contains child spans for the four workflow nodes:
+
+```
+Trace: agent_invocation
+  ├─ Span: classify_intent     input: {message}
+  │                            output: {intent, confidence, needs_retrieval}
+  │                            metadata: {latency_ms, model: ml_category}
+  │
+  ├─ Span: retrieve_knowledge  input: {query, intent}
+  │                            output: {n_docs, strategy, doc_ids}
+  │                            metadata: {latency_ms}
+  │
+  ├─ Span: handle_action       input: {action, intent, order_id}   [when actionable]
+  │                            output: {outcome, reason}
+  │
+  └─ Generation: llm_generate  model: llama3.2
+                               input: [system_prompt + history + user_prompt + context]
+                               output: response text
+                               metadata: {latency_ms, intent, n_context_chars,
+                                          groundedness, has_approval}
+```
+
+**Configuration** (`.env`):
+
+| Variable | Description | Default |
+|---|---|---|
+| `LANGFUSE_ENABLED` | Enable/disable tracing | `false` |
+| `LANGFUSE_PUBLIC_KEY` | LangFuse project public key | — |
+| `LANGFUSE_SECRET_KEY` | LangFuse project secret key | — |
+| `LANGFUSE_HOST` | LangFuse cloud endpoint | `https://us.cloud.langfuse.com` |
+
+**Implementation:** `src/app/observability/langfuse_client.py` — lazy-initialised singleton with thread-safe double-checked locking. All helpers (`create_trace`, `create_span`, `end_span`, `log_generation`, `flush`) are no-ops when disabled or when the package is unavailable, so the application never fails due to tracing errors.
+
+**What LangFuse shows in the dashboard:**
+- Full conversation trace with timeline of all four nodes
+- LLM prompt and response text for every call
+- Intent classification confidence and RAG retrieval doc IDs
+- End-to-end latency breakdown per node
+- Groundedness score correlated with retrieved context length
+- Session replay: all turns for a given `conversation_id` grouped together
+
+### 7.3 Distributed Tracing (OpenTelemetry → Jaeger)
+
+Infra-level spans covering FastAPI request handling, SQLAlchemy queries, Redis calls, Celery task dispatch, and httpx outbound requests. Enable with `docker compose --profile observability up`; Jaeger UI at `http://localhost:16686`.
 
 ---
 
@@ -782,6 +837,7 @@ Distributed tracing via OpenTelemetry (FastAPI, SQLAlchemy, Redis, Celery, httpx
 | ollama | ^0.1.0 | LLM client |
 | PyJWT | ^2.8.0 | JWT authentication |
 | passlib | ^1.7.0 | Password hashing (bcrypt) |
+| langfuse | ^2.0.0 | LLM tracing (traces, spans, generations) |
 | prometheus-client | ^0.19.0 | Metrics export |
 | opentelemetry-sdk | ^1.21.0 | Distributed tracing |
 | loguru | ^0.7.0 | Structured logging |

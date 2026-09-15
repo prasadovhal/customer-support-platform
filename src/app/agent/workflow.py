@@ -16,6 +16,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.agent.llm import LLMClient, OllamaClient
 from app.agent.prompts import SYSTEM_PROMPT, build_user_prompt
 from app.agent.schemas import AgentResult, AgentState
+from app.observability.langfuse_client import (
+    create_span,
+    create_trace,
+    end_span,
+    flush,
+    log_generation,
+    update_trace_output,
+)
 from app.observability.metrics import (
     AGENT_CALLS,
     AGENT_LATENCY,
@@ -87,11 +95,27 @@ def _ml_intent(message: str) -> tuple[str, float]:
 def _make_classify_node():
     async def classify_intent(state: AgentState) -> dict[str, Any]:
         message = state.get("message", "")
+        t0 = time.perf_counter()
         intent, confidence = _ml_intent(message)
+        latency_ms = int((time.perf_counter() - t0) * 1000)
         needs_retrieval = intent not in _GREETING_INTENTS
         logger.debug(
             f"classify: intent={intent} conf={confidence:.2f} retrieve={needs_retrieval}"
         )
+
+        span = create_span(
+            state.get("_lf_trace"),
+            name="classify_intent",
+            input_data={"message": message},
+            output_data={
+                "intent": intent,
+                "confidence": round(confidence, 4),
+                "needs_retrieval": needs_retrieval,
+            },
+            metadata={"latency_ms": latency_ms, "model": "ml_category"},
+        )
+        end_span(span)
+
         return {
             "intent": intent,
             "intent_confidence": confidence,
@@ -115,6 +139,11 @@ def _make_retrieve_node(db: AsyncSession):
             return {}
 
         message = state.get("message", "")
+        span = create_span(
+            state.get("_lf_trace"),
+            name="retrieve_knowledge",
+            input_data={"query": message, "intent": state.get("intent")},
+        )
         try:
             from app.api.v1.rag import _bm25_built, _get_pipeline
 
@@ -135,6 +164,7 @@ def _make_retrieve_node(db: AsyncSession):
                 use_bm25=True,
                 use_reranker=True,
             )
+            latency_ms = int((time.perf_counter() - t0) * 1000)
             strategy = rag_result.retrieval_strategy
             RAG_RETRIEVALS.labels(strategy=strategy, outcome="success").inc()
             RAG_LATENCY.labels(strategy=strategy).observe(time.perf_counter() - t0)
@@ -151,6 +181,15 @@ def _make_retrieve_node(db: AsyncSession):
                 for s in rag_result.sources
             ]
             logger.debug(f"retrieve: {len(doc_ids)} docs, strategy={strategy}")
+            end_span(
+                span,
+                output_data={
+                    "n_docs": len(doc_ids),
+                    "strategy": strategy,
+                    "doc_ids": doc_ids,
+                },
+                metadata={"latency_ms": latency_ms},
+            )
             return {
                 "retrieved_doc_ids": doc_ids,
                 "context_text": rag_result.context_text,
@@ -167,6 +206,7 @@ def _make_retrieve_node(db: AsyncSession):
         except Exception as exc:
             RAG_RETRIEVALS.labels(strategy="hybrid", outcome="error").inc()
             logger.warning(f"RAG retrieval failed (proceeding without context): {exc}")
+            end_span(span, output_data={"error": str(exc)})
             return {"retrieved_doc_ids": [], "context_text": "", "sources": []}
 
     return retrieve_knowledge
@@ -193,6 +233,11 @@ def _make_handle_action_node(db: AsyncSession):
         if not action:
             return {}
 
+        span = create_span(
+            state.get("_lf_trace"),
+            name="handle_action",
+            input_data={"action": action, "intent": intent, "order_id": order_id},
+        )
         try:
             from app.agent.tools import request_approval
 
@@ -208,6 +253,13 @@ def _make_handle_action_node(db: AsyncSession):
                 f"handle_action: {action} → outcome={approval.get('outcome')} "
                 f"approval_id={approval.get('approval_id')}"
             )
+            end_span(
+                span,
+                output_data={
+                    "outcome": approval.get("outcome"),
+                    "reason": approval.get("reason"),
+                },
+            )
             return {
                 "approval_result": approval,
                 "tool_calls": state.get("tool_calls", [])
@@ -215,6 +267,7 @@ def _make_handle_action_node(db: AsyncSession):
             }
         except Exception as exc:
             logger.warning(f"request_approval tool failed: {exc}")
+            end_span(span, output_data={"error": str(exc)})
             return {}
 
     return handle_action
@@ -249,6 +302,7 @@ def _make_generate_node(llm: LLMClient):
         messages: list[dict[str, str]] = history[-6:]
         user_prompt = build_user_prompt(message, full_context)
         messages.append({"role": "user", "content": user_prompt})
+        input_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
 
         from app.core.config import get_settings
 
@@ -263,6 +317,8 @@ def _make_generate_node(llm: LLMClient):
             logger.warning(f"LLM generation failed: {exc}")
             reply = _FALLBACK_RESPONSE
 
+        latency_ms = int((time.perf_counter() - t0) * 1000)
+
         groundedness: Optional[float] = None
         if context.strip():
             try:
@@ -271,6 +327,21 @@ def _make_generate_node(llm: LLMClient):
                 groundedness = round(_context_coverage(reply, context), 4)
             except Exception:
                 pass
+
+        log_generation(
+            trace=state.get("_lf_trace"),
+            name="llm_generate",
+            model=model,
+            input_messages=input_messages,
+            output=reply,
+            latency_ms=latency_ms,
+            metadata={
+                "intent": state.get("intent"),
+                "n_context_chars": len(context),
+                "groundedness": groundedness,
+                "has_approval": approval is not None,
+            },
+        )
 
         logger.debug(f"generate: {len(reply)} chars, groundedness={groundedness}")
         return {"response": reply, "groundedness_score": groundedness}
@@ -321,6 +392,13 @@ async def run_agent(
     if llm is None:
         llm = OllamaClient()
 
+    lf_trace = create_trace(
+        name="agent_invocation",
+        session_id=conversation_id,
+        user_id=customer_id,
+        input_data={"message": message, "order_id": order_id},
+    )
+
     initial_state: AgentState = {
         "conversation_id": conversation_id,
         "customer_id": customer_id,
@@ -339,6 +417,7 @@ async def run_agent(
         "groundedness_score": None,
         "tool_calls": [],
         "error": None,
+        "_lf_trace": lf_trace,
     }
 
     t0 = time.perf_counter()
@@ -356,6 +435,10 @@ async def run_agent(
         logger.error(f"Agent workflow failed: {exc}")
         AGENT_CALLS.labels(intent="unknown", outcome="fallback").inc()
         AGENT_LATENCY.observe(time.perf_counter() - t0)
+        update_trace_output(
+            lf_trace, {"error": str(exc)}, metadata={"outcome": "fallback"}
+        )
+        flush()
         return AgentResult(
             response=_FALLBACK_RESPONSE,
             latency_ms=int((time.perf_counter() - t0) * 1000),
@@ -366,6 +449,18 @@ async def run_agent(
     outcome = "fallback" if not final_state.get("response") else "success"
     AGENT_CALLS.labels(intent=intent, outcome=outcome).inc()
     AGENT_LATENCY.observe(time.perf_counter() - t0)
+
+    update_trace_output(
+        lf_trace,
+        output_data={"response": final_state.get("response"), "intent": intent},
+        metadata={
+            "outcome": outcome,
+            "latency_ms": latency_ms,
+            "n_sources": len(final_state.get("sources", [])),
+            "groundedness": final_state.get("groundedness_score"),
+        },
+    )
+    flush()
 
     return AgentResult(
         response=final_state.get("response") or _FALLBACK_RESPONSE,

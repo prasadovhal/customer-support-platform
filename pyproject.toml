@@ -55,6 +55,9 @@ opentelemetry-instrumentation-celery = "^0.42b0"
 opentelemetry-instrumentation-httpx = "^0.42b0"
 opentelemetry-exporter-jaeger = "^1.21.0"
 
+# LLM observability
+langfuse = "^2.0.0"
+
 # LLM / Model serving
 ollama = "^0.1.0"
 
@@ -127,6 +130,10 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 warn_no_return = true
 strict_equality = true
+
+[[tool.mypy.overrides]]
+module = "langfuse.*"
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"

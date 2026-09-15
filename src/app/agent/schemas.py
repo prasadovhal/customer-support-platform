@@ -42,6 +42,9 @@ class AgentState(TypedDict, total=False):
     # Error passthrough
     error: Optional[str]
 
+    # Internal: LangFuse trace object (not serialised, not part of API contract)
+    _lf_trace: Optional[Any]
+
 
 @dataclass
 class AgentResult:

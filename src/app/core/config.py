@@ -46,10 +46,16 @@ class Settings(BaseSettings):
     OLLAMA_MODEL: str = "llama3.2"
     OLLAMA_TIMEOUT: int = 60
 
-    # Observability
+    # Observability — OpenTelemetry / Jaeger
     OTEL_ENABLED: bool = False
     OTEL_EXPORTER_JAEGER_ENDPOINT: str = "http://localhost:14268/api/traces"
     OTEL_SERVICE_NAME: str = "customer-support-api"
+
+    # Observability — LangFuse (LLM tracing)
+    LANGFUSE_ENABLED: bool = False
+    LANGFUSE_PUBLIC_KEY: Optional[str] = None
+    LANGFUSE_SECRET_KEY: Optional[str] = None
+    LANGFUSE_HOST: str = "https://us.cloud.langfuse.com"
 
     # Policy
     POLICY_CACHE_TTL_SECONDS: int = 300  # 5 minutes
