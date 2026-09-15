@@ -1,0 +1,38 @@
+{
+  "task_name": "escalation",
+  "model_type": "gradient_boosting",
+  "dataset": "val",
+  "n_samples": 200,
+  "accuracy": 0.81,
+  "macro_f1": 0.49454642192072357,
+  "weighted_f1": 0.7740622505985634,
+  "per_class": [
+    {
+      "label": "false",
+      "precision": 0.851063829787234,
+      "recall": 0.9411764705882353,
+      "f1": 0.8938547486033519,
+      "support": 170
+    },
+    {
+      "label": "true",
+      "precision": 0.16666666666666666,
+      "recall": 0.06666666666666667,
+      "f1": 0.09523809523809523,
+      "support": 30
+    }
+  ],
+  "confusion_matrix": [
+    [
+      160,
+      10
+    ],
+    [
+      28,
+      2
+    ]
+  ],
+  "special_metrics": {
+    "escalation_recall": 0.06666666666666667
+  }
+}

@@ -1,11 +1,12 @@
 #!/bin/sh
-# Entrypoint for the API container.
-# Runs Alembic migrations before starting the server so the schema is always
-# up-to-date without a separate migration step in docker-compose.
+# Entrypoint shared by api, worker, and beat containers.
+# Only the api container runs migrations (RUN_MIGRATIONS=true).
 set -e
 
-echo "[entrypoint] Running database migrations..."
-alembic upgrade head
+if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
+    echo "[entrypoint] Running database migrations..."
+    alembic upgrade head
+fi
 
 echo "[entrypoint] Starting application..."
 exec "$@"

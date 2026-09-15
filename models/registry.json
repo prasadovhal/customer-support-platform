@@ -33,6 +33,40 @@
         "macro_f1": 1.0,
         "weighted_f1": 1.0
       }
+    },
+    {
+      "task": "category",
+      "model_type": "gradient_boosting",
+      "model_path": "models\\category\\gradient_boosting\\model.joblib",
+      "registered_at": "2026-09-15T06:39:52.002451+00:00",
+      "feature_version": "1.0.0",
+      "training_size": 600,
+      "val_size": 200,
+      "test_size": 200,
+      "trained_at": "2026-09-15T06:39:51.997858+00:00",
+      "label_column": "category",
+      "class_names": [
+        "account",
+        "orders",
+        "payments",
+        "products",
+        "refunds",
+        "returns",
+        "security",
+        "shipping",
+        "technical",
+        "warranty"
+      ],
+      "val_metrics": {
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "weighted_f1": 1.0
+      },
+      "test_metrics": {
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "weighted_f1": 1.0
+      }
     }
   ],
   "priority": [
@@ -67,6 +101,38 @@
         "P0_recall": 0.3333333333333333,
         "P1_recall": 0.34782608695652173
       }
+    },
+    {
+      "task": "priority",
+      "model_type": "gradient_boosting",
+      "model_path": "models\\priority\\gradient_boosting\\model.joblib",
+      "registered_at": "2026-09-15T06:39:57.466022+00:00",
+      "feature_version": "1.0.0",
+      "training_size": 600,
+      "val_size": 200,
+      "test_size": 200,
+      "trained_at": "2026-09-15T06:39:57.463374+00:00",
+      "label_column": "priority",
+      "class_names": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "val_metrics": {
+        "accuracy": 0.425,
+        "macro_f1": 0.2513688655890491,
+        "weighted_f1": 0.40761788262705695,
+        "P0_recall": 0.0,
+        "P1_recall": 0.08695652173913043
+      },
+      "test_metrics": {
+        "accuracy": 0.435,
+        "macro_f1": 0.23722448671497584,
+        "weighted_f1": 0.40785288345410625,
+        "P0_recall": 0.0,
+        "P1_recall": 0.043478260869565216
+      }
     }
   ],
   "sentiment": [
@@ -96,6 +162,34 @@
         "accuracy": 0.255,
         "macro_f1": 0.2399541994567016,
         "weighted_f1": 0.2659210640296926
+      }
+    },
+    {
+      "task": "sentiment",
+      "model_type": "gradient_boosting",
+      "model_path": "models\\sentiment\\gradient_boosting\\model.joblib",
+      "registered_at": "2026-09-15T06:40:02.910013+00:00",
+      "feature_version": "1.0.0",
+      "training_size": 600,
+      "val_size": 200,
+      "test_size": 200,
+      "trained_at": "2026-09-15T06:40:02.908020+00:00",
+      "label_column": "sentiment",
+      "class_names": [
+        "angry",
+        "negative",
+        "neutral",
+        "positive"
+      ],
+      "val_metrics": {
+        "accuracy": 0.385,
+        "macro_f1": 0.2511204481792717,
+        "weighted_f1": 0.3595350140056023
+      },
+      "test_metrics": {
+        "accuracy": 0.4,
+        "macro_f1": 0.24753984156261197,
+        "weighted_f1": 0.3614270378577779
       }
     }
   ],
@@ -127,6 +221,34 @@
         "weighted_f1": 0.634059867780798,
         "escalation_recall": 0.2413793103448276
       }
+    },
+    {
+      "task": "escalation",
+      "model_type": "gradient_boosting",
+      "model_path": "models\\escalation\\gradient_boosting\\model.joblib",
+      "registered_at": "2026-09-15T06:40:04.269883+00:00",
+      "feature_version": "1.0.0",
+      "training_size": 600,
+      "val_size": 200,
+      "test_size": 200,
+      "trained_at": "2026-09-15T06:40:04.262629+00:00",
+      "label_column": "escalated",
+      "class_names": [
+        "false",
+        "true"
+      ],
+      "val_metrics": {
+        "accuracy": 0.81,
+        "macro_f1": 0.49454642192072357,
+        "weighted_f1": 0.7740622505985634,
+        "escalation_recall": 0.06666666666666667
+      },
+      "test_metrics": {
+        "accuracy": 0.8,
+        "macro_f1": 0.4679436020218143,
+        "weighted_f1": 0.7663740356477787,
+        "escalation_recall": 0.034482758620689655
+      }
     }
   ],
   "routing": [
@@ -140,6 +262,37 @@
       "val_size": 200,
       "test_size": 200,
       "trained_at": "2026-09-14T16:50:34.339005+00:00",
+      "label_column": "assigned_team",
+      "class_names": [
+        "account_support",
+        "billing_support",
+        "orders_support",
+        "returns_support",
+        "security_support",
+        "shipping_support",
+        "technical_support"
+      ],
+      "val_metrics": {
+        "accuracy": 0.975,
+        "macro_f1": 0.8467648488777246,
+        "weighted_f1": 0.9628022546795235
+      },
+      "test_metrics": {
+        "accuracy": 0.97,
+        "macro_f1": 0.8448322212491047,
+        "weighted_f1": 0.955464833355386
+      }
+    },
+    {
+      "task": "routing",
+      "model_type": "gradient_boosting",
+      "model_path": "models\\routing\\gradient_boosting\\model.joblib",
+      "registered_at": "2026-09-15T06:40:13.215069+00:00",
+      "feature_version": "1.0.0",
+      "training_size": 600,
+      "val_size": 200,
+      "test_size": 200,
+      "trained_at": "2026-09-15T06:40:13.211749+00:00",
       "label_column": "assigned_team",
       "class_names": [
         "account_support",

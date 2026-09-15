@@ -1,0 +1,24 @@
+{
+  "feature_version": "1.0.0",
+  "training_size": 600,
+  "val_size": 200,
+  "test_size": 200,
+  "trained_at": "2026-09-15T06:40:04.262629+00:00",
+  "label_column": "escalated",
+  "class_names": [
+    "false",
+    "true"
+  ],
+  "val_metrics": {
+    "accuracy": 0.81,
+    "macro_f1": 0.49454642192072357,
+    "weighted_f1": 0.7740622505985634,
+    "escalation_recall": 0.06666666666666667
+  },
+  "test_metrics": {
+    "accuracy": 0.8,
+    "macro_f1": 0.4679436020218143,
+    "weighted_f1": 0.7663740356477787,
+    "escalation_recall": 0.034482758620689655
+  }
+}

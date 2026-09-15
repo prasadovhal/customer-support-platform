@@ -1,0 +1,24 @@
+{
+  "feature_version": "1.0.0",
+  "training_size": 600,
+  "val_size": 200,
+  "test_size": 200,
+  "trained_at": "2026-09-15T06:40:02.908020+00:00",
+  "label_column": "sentiment",
+  "class_names": [
+    "angry",
+    "negative",
+    "neutral",
+    "positive"
+  ],
+  "val_metrics": {
+    "accuracy": 0.385,
+    "macro_f1": 0.2511204481792717,
+    "weighted_f1": 0.3595350140056023
+  },
+  "test_metrics": {
+    "accuracy": 0.4,
+    "macro_f1": 0.24753984156261197,
+    "weighted_f1": 0.3614270378577779
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "feature_version": "1.0.0",
+  "training_size": 600,
+  "val_size": 200,
+  "test_size": 200,
+  "trained_at": "2026-09-15T06:40:13.211749+00:00",
+  "label_column": "assigned_team",
+  "class_names": [
+    "account_support",
+    "billing_support",
+    "orders_support",
+    "returns_support",
+    "security_support",
+    "shipping_support",
+    "technical_support"
+  ],
+  "val_metrics": {
+    "accuracy": 0.975,
+    "macro_f1": 0.8467648488777246,
+    "weighted_f1": 0.9628022546795235
+  },
+  "test_metrics": {
+    "accuracy": 0.97,
+    "macro_f1": 0.8448322212491047,
+    "weighted_f1": 0.955464833355386
+  }
+}
